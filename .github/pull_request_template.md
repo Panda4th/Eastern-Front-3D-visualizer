@@ -37,7 +37,10 @@ NONE / DESKTOP / SMARTPHONE / BOTH
 
 ## Current HEAD
 
-<!-- 本 PR の最新 commit SHA を記入してください（7〜40桁） -->
+<!-- 本 PR の最新 commit SHA を、40桁のフル SHA で記入してください。
+     短縮 SHA（7桁等）は不可です。
+     Policy Gate は GitHub Cloud Development Foundation v0.3 §14.1 に従い
+     完全一致で判定します。 -->
 
 ---
 
@@ -49,6 +52,9 @@ NONE / DESKTOP / SMARTPHONE / BOTH
 実装担当 AI（Codex 等）はこの欄を記入してはいけません。
 判定内容を生成・推測・仮置きすることも禁止します。
 Draft 段階では未記入が正常です。
+
+SHA 欄（SOL review commit / Current HEAD）は 40桁のフル SHA で記入してください。
+短縮 SHA は Policy Gate で FAIL します。
 -->
 
 SOL review commit:
@@ -67,6 +73,9 @@ Current HEAD:
 実装担当 AI（Codex 等）はこの欄を記入してはいけません。
 判定内容を生成・推測・仮置きすることも禁止します。
 Draft 段階では未記入が正常です。
+
+Decision HEAD は 40桁のフル SHA で記入してください。
+短縮 SHA は Policy Gate で FAIL します。
 -->
 
 Opus decision:

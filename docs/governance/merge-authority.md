@@ -98,9 +98,24 @@ Merge を実行してよいのは **Human Project Owner のみ**とする。
 
 ### 防げないこと
 
-**全条件を満たした Pull Request の Merge ボタンを押した actor を区別すること。**
+上記の技術ガードレールはいずれも、**AI が Human Project Owner と同一の admin identity で動作している**という前提の上に置かれている。admin identity は、ガードレールそのものを変更・削除できる。
 
-これが Option C における唯一の残存リスクであり、本文書の規則によってのみ担保される。
+したがって以下は技術的に防げず、**本文書の規則によってのみ担保される**。
+
+| 防げないこと | 理由 |
+|---|---|
+| 全条件を満たした Pull Request の Merge 実行者の区別 | GitHub 上で Human と AI を区別できない |
+| Branch Protection の変更・削除 | admin 権限で実行可能 |
+| Required Status Checks の解除 | admin 権限で実行可能 |
+| bypass 禁止設定の無効化 | admin 権限で実行可能 |
+| 保護を外したうえでの `main` への直接 push | 保護解除後は技術的制約が残らない |
+| Repository 設定（visibility / merge 方式）の変更 | admin 権限で実行可能 |
+
+したがって、**「独立レビューを経ていない変更が `main` に入る経路はすべて塞がっている」とは言えない。** 塞がっているのは、ガードレールが有効なまま維持されている限りにおいてである。ガードレールの維持自体が、技術ではなく本規則に依存している。
+
+この限界は机上の懸念ではなく、実際に観測されている。2026-08-13、`main` が protected の状態で、commit `a03f509` が Pull Request を経由せず `main` へ到達した。
+
+以上より、**admin 権限を持つ identity による設定変更および直接更新は、すべて残存リスクとして扱う。** Merge 実行者の識別だけが残存リスクではない。
 
 ---
 

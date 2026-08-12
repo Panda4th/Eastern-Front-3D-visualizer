@@ -45,7 +45,8 @@ GitHub Cloud Development Foundation v0.3 §11.3 が想定する「`main` への 
 
 Human が無料の GitHub アカウントをもう 1 つ作成し、Write 権限（Admin ではない）で招待する。
 
-- 効果: 当該 AI については Human-only Merge を技術的に強制できる。
+- 効果: 当該 AI から admin 権限を分離できる。Branch Protection の変更・削除を防げる。
+- **限界: Merge の分離にはならない。** 本 Repository は個人アカウント所有であり、「Restrict who can push to matching branches」は Organization 所有 Repository 専用機能のため設定できない。Write 権限を持つ account は、Branch Protection の条件を満たした Pull Request を Merge できる。Merge を Human に限定するには、Organization 化と push 制限の併用が必要である。
 - 問題: 新規 credential 作成に該当し、AI 単独では実施できない。Claude Code は Human の GitHub 接続を使用するため、Claude 側は Owner identity のまま残る。
 
 ### Option B — GitHub Free Organization + role 分離
@@ -57,8 +58,8 @@ Organization を作成し Repository を移管、Human を Org Owner、AI を Me
 
 ### Option C — 単一 identity を受け入れ、技術ガードレール + 明文規則で運用
 
-- 効果: 追加の credential なしで、CI 失敗状態・レビュー未完状態での Merge をすべて技術的に阻止できる。
-- 残存リスク: 全条件を満たした PR の Merge ボタンを押した actor を区別できない。
+- 効果: 追加の credential なしで、ガードレールが有効に維持されている限り、CI 失敗状態・レビュー未完状態での Merge を阻止できる。
+- 残存リスク: admin identity はガードレールそのものを変更・削除できる。したがって Merge 実行者の識別に加え、Branch Protection の変更、Required Status Checks の解除、保護解除後の直接 push もすべて残存リスクとなる。詳細は `docs/governance/merge-authority.md` §3「防げないこと」を参照。
 
 ---
 
@@ -69,7 +70,7 @@ Organization を作成し Repository を移管、Human を Org Owner、AI を Me
 判断理由は以下。
 
 1. Option A / B は新規 credential 作成または権限構成の変更を伴い、AI が単独で実施してよい範囲を超える。
-2. Option C だけで、「独立レビューを経ていない変更が `main` に入る」経路はすべて塞がる。残る穴は Merge 実行者の識別のみであり、Historical Data の完全性に直接影響しない。
+2. Option A / B も、本 Repository が個人アカウント所有である限り Merge の技術的分離を達成しない。個人アカウント所有 Repository には actor 単位の push 制限が存在しないため、Write 権限があれば条件を満たした PR を Merge できる。Merge 実行者の限定はいずれの選択肢でも規則に依存する。
 3. Option C から Option A / B への移行は、再設計なしで後から追加できる。
 
 本 Repository で到達可能な上限は **PARTIAL** であり、PASS には構造的に到達できない。GitHub基盤構築指示書 v0.2 の受入基準は「PASS または Human 承認済み PARTIAL」を認めているため、本決定は受入基準を満たす。
@@ -81,7 +82,9 @@ Organization を作成し Repository を移管、Human を Org Owner、AI を Me
 - `Human-only Merge Enforcement = PARTIAL`（Human Project Owner 承認済み）
 - 明文規則を `docs/governance/merge-authority.md` として整備し、全 AI が従う。
 - 技術ガードレール（Branch Protection / Required Status Checks / Trusted Policy Gate）を規則の補強として構築する。
-- 技術的措置は規則を代替しない。両方が必要である。
+- **技術ガードレールは admin identity によって変更・削除できるため、規則を代替しない。** ガードレールが有効に維持されていること自体が規則に依存する。
+- **admin 権限を持つ identity による設定変更および直接更新は、すべて残存リスクとして扱う。** 単一の「Merge ボタン」だけが残存リスクではない。
+- Organization 化と push 制限を導入しない限り、Merge 実行者の技術的限定は達成できない。
 
 ---
 
