@@ -1,29 +1,19 @@
 name: Historical Work Item
-description: Historical data, source metadata, schema, or validation work
+description: Work involving historical claims or traceability
 body:
   - type: markdown
-    attributes: {value: "Historical claims require traceable evidence. Never infer missing facts or upload material without confirmed redistribution rights."}
-  - type: textarea
-    id: objective
-    attributes: {label: Objective}
+    attributes:
+      value: Historical claims must be supported by traceable sources. Do not infer missing facts or create placeholder historical data.
+  - {type: textarea, id: historical-objective, attributes: {label: Historical Objective}, validations: {required: true}}
+  - {type: textarea, id: target-period, attributes: {label: Target Period}, validations: {required: true}}
+  - {type: textarea, id: target-geography, attributes: {label: Target Geography}, validations: {required: true}}
+  - {type: textarea, id: target-units-events, attributes: {label: Target Units / Events}, validations: {required: true}}
+  - {type: textarea, id: source-evidence, attributes: {label: Source / Evidence}, validations: {required: true}}
+  - type: dropdown
+    id: source-tier
+    attributes:
+      label: Source Tier
+      options: [Tier 1 — Primary sources / official records, Tier 2 — Official histories / public research, Tier 3 — Academic research]
     validations: {required: true}
-  - type: textarea
-    id: scope
-    attributes: {label: Historical Scope, description: Identify dates, places, formations, operations, granularity, and exclusions.}
-    validations: {required: true}
-  - type: textarea
-    id: sources
-    attributes: {label: Source and Evidence, description: Provide source IDs or bibliographic details, pages or archive IDs, access metadata, and redistribution status.}
-    validations: {required: true}
-  - type: textarea
-    id: traceability
-    attributes: {label: Traceability and Uncertainty, description: Explain traceability, conflicts, gaps, and uncertainty without guessing.}
-    validations: {required: true}
-  - type: textarea
-    id: acceptance
-    attributes: {label: Acceptance Criteria, placeholder: "- [ ] Every claim is traceable to evidence"}
-    validations: {required: true}
-  - type: textarea
-    id: validation
-    attributes: {label: Validation Plan}
-    validations: {required: true}
+  - {type: textarea, id: known-uncertainty, attributes: {label: Known Uncertainty}, validations: {required: true}}
+  - {type: textarea, id: traceability-impact, attributes: {label: Traceability Impact}, validations: {required: true}}

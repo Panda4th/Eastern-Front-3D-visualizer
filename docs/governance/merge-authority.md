@@ -1,22 +1,19 @@
 # Merge Authority Policy
 
-## Policy
+## Current enforcement state
 
-`main` を更新できる唯一の主体は Human Project Owner である。AI actor は Issue、task branch、commit、test、PR、review recommendation および integration recommendation を作成できるが、merge、direct push、force push、protection bypass、auto merge の有効化をしてはならない。
+**Human-only Merge Enforcement: PARTIAL.** Human, Claude, and Codex GitHub actors cannot currently be distinguished completely. Human-only merge therefore is not represented as technically guaranteed by complete identity separation. The repository uses technical guardrails together with this explicit operating rule.
 
-## Option C operation
+## Mandatory rules
 
-1. Human Project Owner は Organization Owner/Admin identity を保持する。
-2. AI は Owner と異なる、最小権限の GitHub identity または GitHub App を使う。
-3. AI identity に `main` push、admin、bypass、secret 管理権限を付与しない。
-4. Required CI、最新 HEAD に対する SOL PASS、Opus integration decision、未解決 conversation がないことを Human が確認する。
-5. Human Project Owner が Squash Merge を実行する。
+- AI must not merge a pull request.
+- AI must not push directly to `main`.
+- AI must not change, disable, or bypass Branch Protection.
+- Only the Human Project Owner makes the final merge decision and performs the merge.
+- AI may implement and test changes on task branches and submit review material, subject to its available access.
 
-Owner session を AI と共有すると技術的分離は成立しない。資格情報を恒常的に AI へ渡さない。緊急時も branch protection を解除して直接 push せず、通常の PR 手順を使用する。例外が避けられない場合は、事前に Issue へ理由・期間・影響を記録し、Human が実行し、直後に保護を復旧して監査記録を残す。
+Branch Protection must require a PR, required status checks, an up-to-date branch, and conversation resolution; must prohibit force pushes and deletion; and must not allow AI bypass. Squash merge is the approved merge method.
 
-## Required repository settings
+## Future review
 
-- Require a pull request, required status checks, up-to-date branch and conversation resolution
-- Restrict `main` pushes to the Human Project Owner
-- Do not allow bypassing; disallow force pushes and deletion
-- Squash merge only; auto merge off; delete merged head branches
+If dedicated machine accounts, GitHub Apps, or another mechanism later provides verifiable actor separation, technical enforcement may be reconsidered through a new recorded decision. This policy does not claim that such separation exists today.

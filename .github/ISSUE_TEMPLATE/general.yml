@@ -1,26 +1,11 @@
 name: General Work Item
 description: Code, documentation, infrastructure, or other non-historical work
 body:
-  - type: textarea
-    id: objective
-    attributes: {label: Objective, description: State the outcome and why it is needed.}
-    validations: {required: true}
-  - type: textarea
-    id: scope
-    attributes: {label: Scope, description: List included and explicitly excluded work.}
-    validations: {required: true}
-  - type: textarea
-    id: acceptance
-    attributes:
-      label: Acceptance Criteria
-      description: Provide objectively verifiable completion criteria.
-      placeholder: "- [ ] Criterion 1"
-    validations: {required: true}
-  - type: textarea
-    id: dependencies
-    attributes: {label: Dependencies and Risks, description: Link dependencies and identify risks. Write NONE when not applicable.}
-    validations: {required: true}
-  - type: dropdown
-    id: client-impact
-    attributes: {label: Client Compatibility Impact, options: [NONE, DESKTOP, SMARTPHONE, BOTH]}
-    validations: {required: true}
+  - {type: textarea, id: objective, attributes: {label: Objective}, validations: {required: true}}
+  - {type: textarea, id: scope, attributes: {label: Scope}, validations: {required: true}}
+  - {type: textarea, id: requirements, attributes: {label: Requirements}, validations: {required: true}}
+  - {type: textarea, id: constraints, attributes: {label: Constraints}, validations: {required: true}}
+  - {type: textarea, id: acceptance, attributes: {label: Acceptance Criteria}, validations: {required: true}}
+  - {type: textarea, id: dependencies, attributes: {label: Dependencies}, validations: {required: true}}
+  - {type: textarea, id: evidence, attributes: {label: Source / Evidence}, validations: {required: true}}
+  - {type: textarea, id: out-of-scope, attributes: {label: Out of Scope}, validations: {required: true}}
