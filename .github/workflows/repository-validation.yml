@@ -1,0 +1,17 @@
+name: Repository Validation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  repository-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Validate repository foundation
+        run: bash scripts/validate-repository.sh

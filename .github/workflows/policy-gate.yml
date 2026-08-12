@@ -1,0 +1,107 @@
+name: Trusted Policy Gate
+
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  policy-gate:
+    name: PR metadata policy
+    runs-on: ubuntu-latest
+    steps:
+      # This job deliberately uses only event/API metadata. Never checkout or run PR code here.
+      - name: Validate pull request contract
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            if (pr.draft) {
+              core.notice('Draft PR: review attestations are intentionally deferred until Ready for Review.');
+              return;
+            }
+
+            const body = pr.body || '';
+            const errors = [];
+            const escape = value => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const section = heading => {
+              const pattern = new RegExp(`^##\\s+${escape(heading)}\\s*$`, 'mi');
+              const match = pattern.exec(body);
+              if (!match) return null;
+              const rest = body.slice(match.index + match[0].length);
+              const next = rest.search(/^##\s+/m);
+              return (next < 0 ? rest : rest.slice(0, next))
+                .replace(/<!--[^]*?-->/g, '').trim();
+            };
+            const required = [
+              'Objective', 'Related Issue', 'Scope', 'Changes', 'Tests',
+              'Historical Data Impact', 'Source Traceability Impact',
+              'Client Compatibility Impact', 'Known Limitations', 'Current HEAD',
+              'SOL Independent Review', 'Integration Decision'
+            ];
+            for (const heading of required) {
+              if (!section(heading)) errors.push(`Missing or empty section: ${heading}`);
+            }
+
+            const oneOf = (heading, choices) => {
+              const value = section(heading);
+              if (value && !choices.includes(value.toUpperCase())) {
+                errors.push(`${heading} must be one of: ${choices.join(', ')}`);
+              }
+              return value?.toUpperCase();
+            };
+            const historical = oneOf('Historical Data Impact', ['NONE', 'YES']);
+            oneOf('Source Traceability Impact', ['NONE', 'YES']);
+            oneOf('Client Compatibility Impact', ['NONE', 'DESKTOP', 'SMARTPHONE', 'BOTH']);
+
+            const related = section('Related Issue') || '';
+            const issueMatch = related.match(/(?:^|\s)#(\d+)(?:\s|$)/);
+            if (!issueMatch) {
+              errors.push('Related Issue must contain an issue reference such as #123.');
+            } else {
+              try {
+                await github.rest.issues.get({
+                  owner: context.repo.owner, repo: context.repo.repo,
+                  issue_number: Number(issueMatch[1])
+                });
+              } catch (error) {
+                errors.push(`Related Issue #${issueMatch[1]} does not exist or is not readable.`);
+              }
+            }
+
+            const head = pr.head.sha;
+            if ((section('Current HEAD') || '').toLowerCase() !== head.toLowerCase()) {
+              errors.push('Current HEAD must exactly equal the actual PR HEAD SHA.');
+            }
+
+            const review = section('SOL Independent Review') || '';
+            const field = (name, text = review) => {
+              const match = text.match(new RegExp(`^${escape(name)}\\s*:\\s*(.+?)\\s*$`, 'mi'));
+              return match ? match[1].trim() : '';
+            };
+            if (field('SOL review commit').toLowerCase() !== head.toLowerCase())
+              errors.push('SOL review commit must equal the actual PR HEAD SHA.');
+            if (field('Current HEAD').toLowerCase() !== head.toLowerCase())
+              errors.push('SOL review Current HEAD must equal the actual PR HEAD SHA.');
+            if (field('SOL review decision').toUpperCase() !== 'PASS')
+              errors.push('SOL review decision must be PASS.');
+            if (field('BLOCKER') !== '0') errors.push('BLOCKER must be 0.');
+            if (field('MUST FIX') !== '0') errors.push('MUST FIX must be 0.');
+
+            const integration = section('Integration Decision') || '';
+            if (!field('Opus decision', integration)) errors.push('Opus decision is required.');
+            if (field('Decision HEAD', integration).toLowerCase() !== head.toLowerCase())
+              errors.push('Decision HEAD must equal the actual PR HEAD SHA.');
+
+            if (historical === 'YES') {
+              const detail = section('Historical Change Detail') || '';
+              for (const name of ['Affected Source IDs', 'Source / Evidence', 'Traceability Impact', 'Validation Result', 'Known Uncertainty']) {
+                if (!field(name, detail)) errors.push(`Historical Change Detail field is required: ${name}`);
+              }
+            }
+
+            if (errors.length) core.setFailed(errors.map(error => `- ${error}`).join('\n'));

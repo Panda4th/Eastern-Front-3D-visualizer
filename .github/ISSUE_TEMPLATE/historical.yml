@@ -1,0 +1,29 @@
+name: Historical Work Item
+description: Historical data, source metadata, schema, or validation work
+body:
+  - type: markdown
+    attributes: {value: "Historical claims require traceable evidence. Never infer missing facts or upload material without confirmed redistribution rights."}
+  - type: textarea
+    id: objective
+    attributes: {label: Objective}
+    validations: {required: true}
+  - type: textarea
+    id: scope
+    attributes: {label: Historical Scope, description: Identify dates, places, formations, operations, granularity, and exclusions.}
+    validations: {required: true}
+  - type: textarea
+    id: sources
+    attributes: {label: Source and Evidence, description: Provide source IDs or bibliographic details, pages or archive IDs, access metadata, and redistribution status.}
+    validations: {required: true}
+  - type: textarea
+    id: traceability
+    attributes: {label: Traceability and Uncertainty, description: Explain traceability, conflicts, gaps, and uncertainty without guessing.}
+    validations: {required: true}
+  - type: textarea
+    id: acceptance
+    attributes: {label: Acceptance Criteria, placeholder: "- [ ] Every claim is traceable to evidence"}
+    validations: {required: true}
+  - type: textarea
+    id: validation
+    attributes: {label: Validation Plan}
+    validations: {required: true}
