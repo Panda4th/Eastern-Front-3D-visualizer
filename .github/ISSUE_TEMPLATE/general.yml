@@ -1,0 +1,92 @@
+name: General Work Item
+description: Feature / Bug / Design / Infrastructure / Documentation
+title: "[General] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## General Work Item
+
+        Historical Data / Research を扱う Issue は、この Template ではなく **Historical Work Item** を使用してください。
+
+        AI が Issue 本文だけを読んで作業できる状態を目指します。曖昧な記述を避け、判断に必要な情報を本文へ含めてください。
+
+        該当しない項目には `NONE` と記入してください。空欄のままにしないでください。
+
+  - type: dropdown
+    id: work-type
+    attributes:
+      label: Work Type
+      description: 該当する種別を選択してください。
+      options:
+        - Feature
+        - Bug
+        - Design
+        - Infrastructure
+        - Documentation
+    validations:
+      required: true
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: この Issue で最終的に何を成立させるかを記述してください。手段ではなく目的を書いてください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: 対象となるファイル・機能・範囲を具体的に列挙してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: requirements
+    attributes:
+      label: Requirements
+      description: 満たすべき要求を列挙してください。実装者が解釈で埋めなくて済む粒度で記述してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: constraints
+    attributes:
+      label: Constraints
+      description: 守るべき制約を列挙してください。技術選定の凍結、Public Repository であること、権限上の制限などを含みます。
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: 完了と判断できる条件を、検証可能な形で列挙してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: 先行して解決が必要な事項、他 Issue、Human 操作、外部提供物を列挙してください。無い場合は NONE と記入してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: source-evidence
+    attributes:
+      label: Source / Evidence
+      description: この Issue の要求が由来する文書・決定・仕様を示してください。新規の設計判断を含む場合はその旨を明記してください。無い場合は NONE と記入してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: out-of-scope
+    attributes:
+      label: Out of Scope
+      description: この Issue では実施しないことを明示してください。範囲の拡大を防ぐための項目です。
+    validations:
+      required: true

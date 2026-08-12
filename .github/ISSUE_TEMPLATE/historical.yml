@@ -1,0 +1,94 @@
+name: Historical Work Item
+description: Historical Data / Research
+title: "[Historical] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Historical Work Item
+
+        Historical Data および史料調査のための Issue です。
+
+        ### 必ず守ること
+
+        本プロジェクトの品質優先順位は次のとおりです。
+
+        ```text
+        史実性 ＞ トレーサビリティ ＞ 理解しやすさ ＞ 網羅性 ＞ 視覚的演出
+        ```
+
+        - **史料根拠のない情報を史実として登録してはなりません。**
+        - AI・開発者による推測、演出目的の架空データ、根拠のない位置補間、前後関係のみから生成した部隊配置を、確認済み史実として扱ってはなりません。
+        - 史料が不足する場合は、無理に再現せず「確認不能」として扱ってください。網羅性を高める目的で推測情報を追加してはなりません。
+        - 補助資料（Wikipedia / 一般Webサイト / 個人ブログ / SNS / 出典不明の戦況図等）のみを根拠として Historical Dataset へ採用することはできません。元史料を特定してください。
+
+        詳細は [Project Foundation v0.1](../blob/main/docs/foundation/project-foundation_v0.1.md) §3〜§9 を参照してください。
+
+  - type: textarea
+    id: historical-objective
+    attributes:
+      label: Historical Objective
+      description: この Issue で確定または調査したい史実上の対象を記述してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: target-period
+    attributes:
+      label: Target Period
+      description: 対象期間を記述してください。日付が確定していない場合は、確定している範囲と不確定な範囲を区別して記述してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: target-geography
+    attributes:
+      label: Target Geography
+      description: 対象地域・戦線・都市等を記述してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: target-units-events
+    attributes:
+      label: Target Units / Events
+      description: 対象となる部隊・作戦・戦闘・事象を記述してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: source-evidence
+    attributes:
+      label: Source / Evidence
+      description: 根拠となる史料を、逆引き可能な形で記述してください。Title / Author / Institution / Publication / Page / URL / Archive ID 等を含めてください。
+    validations:
+      required: true
+
+  - type: dropdown
+    id: source-tier
+    attributes:
+      label: Source Tier
+      description: 主たる根拠史料の Tier を選択してください。補助資料のみの場合、Historical Dataset への採用はできません。
+      options:
+        - Tier 1 — 一次史料・公的記録
+        - Tier 2 — 公刊戦史・公的研究
+        - Tier 3 — 学術研究
+        - 補助資料のみ（単独では採用不可・元史料の特定が必要）
+    validations:
+      required: true
+
+  - type: textarea
+    id: known-uncertainty
+    attributes:
+      label: Known Uncertainty
+      description: 史料間の差異、確定できない値、定義の不一致、確認不能な項目を明示してください。無い場合は NONE と記入してください。
+    validations:
+      required: true
+
+  - type: textarea
+    id: traceability-impact
+    attributes:
+      label: Traceability Impact
+      description: Source ID の追加・変更・削除、既存参照への影響、逆引き構造への影響を記述してください。無い場合は NONE と記入してください。
+    validations:
+      required: true
