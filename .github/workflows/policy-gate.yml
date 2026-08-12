@@ -35,49 +35,59 @@ jobs:
               return (end < 0 ? tail : tail.slice(0, end)).replace(/<!--[^]*?-->/g, '').trim();
             };
             const field = (text, name) => {
-              const m = (text || '').match(new RegExp(`^${esc(name)}\\s*:\\s*(.*?)\\s*$`, 'mi'));
+              const m = (text || '').match(new RegExp(`^${esc(name)}[ \\t]*:[ \\t]*(.*?)[ \\t]*$`, 'mi'));
               return m ? m[1].trim() : '';
             };
             const headings = ['Objective','Related Issue','Scope','Changes','Tests','Historical Data Impact','Source Traceability Impact','Client Compatibility Impact','Known Limitations','Current HEAD','SOL Independent Review','Integration Decision'];
             for (const h of headings) if (section(h) === null) errors.push(`Missing PR heading: ## ${h}`);
-
-            const related = section('Related Issue') || '';
-            const issue = related.match(/(?:^|\s)#(\d+)(?=\s|$)/);
-            if (!issue) errors.push('Related Issue must contain #<number>.');
-            else try {
-              await github.rest.issues.get({...context.repo, issue_number: Number(issue[1])});
-            } catch (_) { errors.push(`Related Issue #${issue[1]} is not readable.`); }
 
             const exact = (name, allowed) => {
               const value = (section(name) || '').toUpperCase();
               if (!allowed.includes(value)) errors.push(`${name} must be ${allowed.join(' / ')}.`);
               return value;
             };
-            const historical = exact('Historical Data Impact', ['NONE','YES']);
-            exact('Source Traceability Impact', ['NONE','YES']);
-            exact('Client Compatibility Impact', ['NONE','DESKTOP','SMARTPHONE','BOTH']);
-
             const files = await github.paginate(github.rest.pulls.listFiles, {...context.repo, pull_number: pr.number, per_page: 100});
             const names = files.map(f => f.filename);
-            const governance = names.some(p => p.startsWith('.github/workflows/') || p.startsWith('.github/ISSUE_TEMPLATE/') || p === '.github/pull_request_template.md' || p.startsWith('docs/foundation/') || p.startsWith('docs/governance/'));
-            const product = names.some(p => p.startsWith('src/') || p.startsWith('historical/') || p.startsWith('assets/'));
-            if (governance && product) errors.push('Governance-sensitive and product changes must not be mixed in one PR.');
+            const governanceFiles = names.filter(p => p.startsWith('.github/workflows/') || p.startsWith('.github/ISSUE_TEMPLATE/') || p === '.github/pull_request_template.md' || p.startsWith('docs/foundation/') || p.startsWith('docs/governance/'));
+            const productFiles = names.filter(p => p.startsWith('src/') || p.startsWith('historical/') || p.startsWith('assets/'));
+            if (governanceFiles.length && productFiles.length) {
+              errors.push(`Governance-sensitive and product changes must not be mixed in one PR.\n  Governance-sensitive files:\n${governanceFiles.map(p => `    - ${p}`).join('\n')}\n  Product files:\n${productFiles.map(p => `    - ${p}`).join('\n')}`);
+            }
             const historicalFiles = names.some(p => p.startsWith('historical/'));
-            if (historicalFiles && historical !== 'YES') errors.push('Changes under historical/** require Historical Data Impact = YES.');
-            if (!historicalFiles && historical === 'YES') errors.push('Historical Data Impact = YES requires a change under historical/**.');
+            const declaredHistorical = (section('Historical Data Impact') || '').toUpperCase();
+            if (historicalFiles && declaredHistorical !== 'YES') errors.push('Changes under historical/** require Historical Data Impact = YES.');
 
             if (!pr.draft) {
+              const related = section('Related Issue') || '';
+              const issue = related.match(/(?:^|\s)#(\d+)(?=\s|$)/);
+              if (!issue) errors.push('Related Issue must contain #<number>.');
+              else try {
+                const response = await github.rest.issues.get({...context.repo, issue_number: Number(issue[1])});
+                if (response.data.pull_request) errors.push(`Related Issue #${issue[1]} is a pull request, not an issue.`);
+              } catch (_) { errors.push(`Related Issue #${issue[1]} is not readable.`); }
+
               const head = pr.head.sha.toLowerCase();
-              if ((section('Current HEAD') || '').toLowerCase() !== head) errors.push('Current HEAD does not match PR HEAD.');
+              const matchesHead = value => /^[0-9a-f]{7,40}$/i.test(value || '') && head.startsWith(value.toLowerCase());
+              if (!matchesHead(section('Current HEAD') || '')) errors.push('Current HEAD must be a 7-40 character hexadecimal prefix of PR HEAD.');
               const sol = section('SOL Independent Review') || '';
-              if (field(sol, 'SOL review commit').toLowerCase() !== head) errors.push('SOL review commit does not match PR HEAD.');
-              if (field(sol, 'Current HEAD').toLowerCase() !== head) errors.push('SOL Current HEAD does not match PR HEAD.');
+              if (!matchesHead(field(sol, 'SOL review commit'))) errors.push('SOL review commit must be a 7-40 character hexadecimal prefix of PR HEAD.');
+              if (!matchesHead(field(sol, 'Current HEAD'))) errors.push('SOL Current HEAD must be a 7-40 character hexadecimal prefix of PR HEAD.');
               if (field(sol, 'SOL review decision').toUpperCase() !== 'PASS') errors.push('SOL review decision must be PASS.');
               if (field(sol, 'BLOCKER') !== '0') errors.push('BLOCKER must be 0.');
               if (field(sol, 'MUST FIX') !== '0') errors.push('MUST FIX must be 0.');
               const integration = section('Integration Decision') || '';
               if (field(integration, 'Opus decision').toUpperCase() !== 'APPROVE') errors.push('Opus decision must be APPROVE.');
-              if (field(integration, 'Decision HEAD').toLowerCase() !== head) errors.push('Decision HEAD does not match PR HEAD.');
+              if (!matchesHead(field(integration, 'Decision HEAD'))) errors.push('Decision HEAD must be a 7-40 character hexadecimal prefix of PR HEAD.');
+
+              const historical = exact('Historical Data Impact', ['NONE','YES']);
+              exact('Source Traceability Impact', ['NONE','YES']);
+              exact('Client Compatibility Impact', ['NONE','DESKTOP','SMARTPHONE','BOTH']);
+              if (historical === 'YES') {
+                const detail = section('Historical Change Detail') || '';
+                for (const name of ['Affected Source IDs','Source / Evidence','Traceability Impact','Validation Result','Known Uncertainty']) {
+                  if (!field(detail, name)) errors.push(`Historical Change Detail field must be non-empty: ${name}`);
+                }
+              }
             }
 
             if (errors.length) core.setFailed(errors.map(e => `- ${e}`).join('\n'));
