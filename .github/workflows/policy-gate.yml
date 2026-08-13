@@ -67,17 +67,19 @@ jobs:
               } catch (_) { errors.push(`Related Issue #${issue[1]} is not readable.`); }
 
               const head = pr.head.sha.toLowerCase();
-              const matchesHead = value => /^[0-9a-f]{7,40}$/i.test(value || '') && head.startsWith(value.toLowerCase());
-              if (!matchesHead(section('Current HEAD') || '')) errors.push('Current HEAD must be a 7-40 character hexadecimal prefix of PR HEAD.');
+              // R-8.5 (corrected): full 40-character SHA only, case-insensitive exact match against PR HEAD. No short/prefix SHAs.
+              const matchesHead = value => /^[0-9a-f]{40}$/i.test(value || '') && value.toLowerCase() === head;
+              const shaGuidance = 'Please enter the full 40-character SHA.';
+              if (!matchesHead(section('Current HEAD') || '')) errors.push(`Current HEAD must be the full 40-character PR HEAD SHA, exactly matching the actual PR HEAD. ${shaGuidance}`);
               const sol = section('SOL Independent Review') || '';
-              if (!matchesHead(field(sol, 'SOL review commit'))) errors.push('SOL review commit must be a 7-40 character hexadecimal prefix of PR HEAD.');
-              if (!matchesHead(field(sol, 'Current HEAD'))) errors.push('SOL Current HEAD must be a 7-40 character hexadecimal prefix of PR HEAD.');
+              if (!matchesHead(field(sol, 'SOL review commit'))) errors.push(`SOL review commit must be the full 40-character PR HEAD SHA, exactly matching the actual PR HEAD. ${shaGuidance}`);
+              if (!matchesHead(field(sol, 'Current HEAD'))) errors.push(`SOL Current HEAD must be the full 40-character PR HEAD SHA, exactly matching the actual PR HEAD. ${shaGuidance}`);
               if (field(sol, 'SOL review decision').toUpperCase() !== 'PASS') errors.push('SOL review decision must be PASS.');
               if (field(sol, 'BLOCKER') !== '0') errors.push('BLOCKER must be 0.');
               if (field(sol, 'MUST FIX') !== '0') errors.push('MUST FIX must be 0.');
               const integration = section('Integration Decision') || '';
               if (field(integration, 'Opus decision').toUpperCase() !== 'APPROVE') errors.push('Opus decision must be APPROVE.');
-              if (!matchesHead(field(integration, 'Decision HEAD'))) errors.push('Decision HEAD must be a 7-40 character hexadecimal prefix of PR HEAD.');
+              if (!matchesHead(field(integration, 'Decision HEAD'))) errors.push(`Decision HEAD must be the full 40-character PR HEAD SHA, exactly matching the actual PR HEAD. ${shaGuidance}`);
 
               const historical = exact('Historical Data Impact', ['NONE','YES']);
               exact('Source Traceability Impact', ['NONE','YES']);
