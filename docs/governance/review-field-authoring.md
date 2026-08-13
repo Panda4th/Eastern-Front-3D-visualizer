@@ -224,7 +224,7 @@ push・Branch Protection・`.github/` の変更は行わなかった。
   現行の実行環境では恒久的に成立する。Human Project Owner による転記が行われなければ、PR #14 で
   観測されたとおりレビュー本体の GitHub native な記録は残らない。
 
-未解決であり、今後 Human Project Owner の判断および integration の整備が必要な状態である。本 Issue
+未解決であり、今後 Human Project Owner の判断および integration の整備が必要な状態である。Issue #13
 では identity 分離の解決策を確定しない。
 
 ---

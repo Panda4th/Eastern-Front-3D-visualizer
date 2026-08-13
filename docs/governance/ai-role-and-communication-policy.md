@@ -1,8 +1,14 @@
 # AI Role and Communication Policy
 
-**Source:** Issue #13 Approved Governance Revision  
-**Base HEAD:** `751bcd7c83a7c71e127e776c1f182f62f69ac5ea`  
-**Repository:** `Panda4th/Eastern-Front-3D-visualizer`
+**Status:** Active
+**Adopted:** 2026-08-13
+**Decided by:** Human Project Owner
+**Upstream:** Project Foundation v0.1 / GitHub Cloud Development Foundation v0.3
+**Related:** [Merge Authority Policy](./merge-authority.md) / [Review Field Authoring Policy](./review-field-authoring.md)（本書はいずれの権限・記入責任も変更しない）
+
+---
+
+本書は Issue #13 の Approved Governance Revision に基づく。起草時点の base HEAD は `751bcd7c83a7c71e127e776c1f182f62f69ac5ea` である。
 
 ## 1. 共通原則
 
@@ -206,13 +212,13 @@ Pull Request 本文の記入責任は、この文書で再定義しない。正�
 
 ## 13. Required Status Checks と Merge 条件
 
-main branch の Required Status Checks は `pr-policy` と `validation` の 2 件である。「Require branches to be up to date before merging」は無効であり、Required Status Checks が base branch の最新性を保証するとは扱わない。
+Required Status Checks の具体的な内容は本書で再定義しない。正本は `docs/governance/review-field-authoring.md` §8 とする。
 
 Required Status Checks および Policy Gate は規則を補強するが、Human-only Merge や自己承認禁止を代替しない。Merge 条件と自己承認禁止の正本は `docs/governance/merge-authority.md` とし、特に同文書 §2.6 を弱めない。
 
 ## 14. GitHub Cloud Development Foundation v0.3 との運用差分
 
-GitHub Cloud Development Foundation v0.3 は設計時点で妥当であった。その後の実測と Human Project Owner の運用決定により前提が変わったため、後続改訂が必要な差分を以下に列挙する。本 Issue では v0.3 本体を改訂しない。
+GitHub Cloud Development Foundation v0.3 は設計時点で妥当であった。その後の実測と Human Project Owner の運用決定により前提が変わったため、後続改訂が必要な差分を以下に列挙する。Issue #13 では v0.3 本体を改訂しない。
 
 | # | 対応節 | v0.3 の現行記述 | 決定後の実態 |
 |---:|---|---|---|
@@ -227,16 +233,26 @@ GitHub Cloud Development Foundation v0.3 は設計時点で妥当であった。
 
 SOL の Review 欄 write capability と actor identity Traceability は別の問題である。Pull Request 本文への書き込みが可能であっても、記入 actor が SOL であることを技術的に証明できることにはならない。
 
-本 Issue では identity 分離そのものの解決策、GitHub App、dedicated integration または reviewer identity の方式を確定しない。共有された `Panda4th` / admin identity の残存リスクを解決済みとして扱わない。判断は Human Project Owner が行う。
+Issue #13 では identity 分離そのものの解決策、GitHub App、dedicated integration または reviewer identity の方式を確定しない。共有された `Panda4th` / admin identity の残存リスクを解決済みとして扱わない。判断は Human Project Owner が行う。
 
 ## 15. 後続改訂とガバナンス凍結
 
-本 Issue の Merge をもってガバナンス文書整備フェーズを終了し、次フェーズを Technology Selection とする。
+Issue #13 の Merge をもってガバナンス文書整備フェーズを終了し、次フェーズを Technology Selection とする。
 
-§14 の v0.3 改訂対象は個別 Pull Request に分割せず、単一の集約 Issue にまとめる。集約 Issue は本 Issue の Merge 後に起票し、この文書の §14 を参照して内容を再定義しない。Issue 番号は未採番であるため、本書では記載しない。
+§14 の v0.3 改訂対象は個別 Pull Request に分割せず、単一の集約 Issue にまとめる。集約 Issue は Issue #13 の Merge 後に起票し、この文書の §14 を参照して内容を再定義しない。Issue 番号は未採番であるため、本書では記載しない。
 
-本 Issue の Merge 後、Technology Selection 完了まで、ガバナンス文書を対象とする新規 Pull Request を凍結する。Merge 済み文書に含まれる事実誤りの是正は凍結対象外とし、文書の正確性を優先する。
+Issue #13 の Merge 後、Technology Selection 完了まで、ガバナンス文書を対象とする新規 Pull Request を凍結する。Merge 済み文書に含まれる事実誤りの是正は凍結対象外とし、文書の正確性を優先する。
 
 `docs/governance/**` は governance-sensitive path として扱う。凍結解除後を含め、governance-sensitive Pull Request を同時に複数進行させない。
 
 本書は、Historical Data Model、Source Acceptance、Technology Selection または application implementation を定義・変更しない。
+
+## 16. 本書の見直し条件
+
+以下のいずれかが成立した場合、本書を再評価する。判断は Human Project Owner が行う。
+
+- Codex の実行環境へ Git remote および GitHub 認証が付与され、transport が実際に可能になった場合。§3 および §4 の transport 配分（C-4 (b) による決定）を再評価する。
+- 担当 AI ごとに分離された GitHub identity（GitHub App / machine account / dedicated integration）が用意された場合。§14 の差分 5 および差分 8 を再評価する。この条件は `docs/governance/merge-authority.md` §5 の見直し条件と連動する。
+- §15 のガバナンス凍結が解除された場合。§14 に列挙した v0.3 改訂対象の処理状況に応じて本書を更新する。
+- GitHub Cloud Development Foundation v0.3 が §14 の差分を反映して改訂された場合。改訂後の v0.3 を正本として §14 の記述を更新する。
+- Human Project Owner が、本書の定める役割分担、出力言語、または指示・報告形式について新たな決定を行った場合。
