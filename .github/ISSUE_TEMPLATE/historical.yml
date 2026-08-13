@@ -1,0 +1,19 @@
+name: Historical Work Item
+description: Work involving historical claims or traceability
+body:
+  - type: markdown
+    attributes:
+      value: Historical claims must be supported by traceable sources. Do not infer missing facts or create placeholder historical data.
+  - {type: textarea, id: historical-objective, attributes: {label: Historical Objective}, validations: {required: true}}
+  - {type: textarea, id: target-period, attributes: {label: Target Period}, validations: {required: true}}
+  - {type: textarea, id: target-geography, attributes: {label: Target Geography}, validations: {required: true}}
+  - {type: textarea, id: target-units-events, attributes: {label: Target Units / Events}, validations: {required: true}}
+  - {type: textarea, id: source-evidence, attributes: {label: Source / Evidence}, validations: {required: true}}
+  - type: dropdown
+    id: source-tier
+    attributes:
+      label: Source Tier
+      options: [Tier 1 — Primary sources / official records, Tier 2 — Official histories / public research, Tier 3 — Academic research]
+    validations: {required: true}
+  - {type: textarea, id: known-uncertainty, attributes: {label: Known Uncertainty}, validations: {required: true}}
+  - {type: textarea, id: traceability-impact, attributes: {label: Traceability Impact}, validations: {required: true}}

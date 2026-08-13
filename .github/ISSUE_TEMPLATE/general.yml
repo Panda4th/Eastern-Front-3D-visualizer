@@ -1,0 +1,11 @@
+name: General Work Item
+description: Code, documentation, infrastructure, or other non-historical work
+body:
+  - {type: textarea, id: objective, attributes: {label: Objective}, validations: {required: true}}
+  - {type: textarea, id: scope, attributes: {label: Scope}, validations: {required: true}}
+  - {type: textarea, id: requirements, attributes: {label: Requirements}, validations: {required: true}}
+  - {type: textarea, id: constraints, attributes: {label: Constraints}, validations: {required: true}}
+  - {type: textarea, id: acceptance, attributes: {label: Acceptance Criteria}, validations: {required: true}}
+  - {type: textarea, id: dependencies, attributes: {label: Dependencies}, validations: {required: true}}
+  - {type: textarea, id: evidence, attributes: {label: Source / Evidence}, validations: {required: true}}
+  - {type: textarea, id: out-of-scope, attributes: {label: Out of Scope}, validations: {required: true}}

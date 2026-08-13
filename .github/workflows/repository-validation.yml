@@ -1,0 +1,58 @@
+name: repository
+
+on:
+  pull_request_target:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    steps:
+      # Treat the candidate tree and blobs strictly as data; never checkout or execute them.
+      - name: Validate repository structure
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const sha = context.payload.pull_request?.head.sha || context.sha;
+            const {data} = await github.rest.git.getTree({...context.repo, tree_sha: sha, recursive: 'true'});
+            if (data.truncated) core.setFailed('Candidate tree is truncated; validation cannot be authoritative.');
+            const paths = new Set(data.tree.map(item => item.path));
+            const requiredDirectories = [
+              '.github/ISSUE_TEMPLATE', '.github/workflows',
+              'docs/foundation', 'docs/architecture', 'docs/governance', 'docs/decisions',
+              'historical/data', 'historical/sources', 'historical/schemas', 'historical/validation'
+            ];
+            const requiredFiles = [
+              'README.md',
+              'docs/foundation/project-foundation_v0.1.md',
+              'docs/architecture/github-cloud-development-foundation_v0.3.md',
+              'docs/governance/merge-authority.md',
+              'docs/decisions/0001-identity-separation-option-c.md',
+              '.github/ISSUE_TEMPLATE/general.yml',
+              '.github/ISSUE_TEMPLATE/historical.yml',
+              '.github/pull_request_template.md',
+              '.github/workflows/policy-gate.yml',
+              '.github/workflows/repository-validation.yml',
+              'historical/data/README.md', 'historical/sources/README.md',
+              'historical/schemas/README.md', 'historical/validation/README.md'
+            ];
+            const missing = [];
+            for (const dir of requiredDirectories) {
+              if (![...paths].some(path => path === dir || path.startsWith(`${dir}/`))) missing.push(`${dir}/ (directory)`);
+            }
+            for (const file of requiredFiles) if (!paths.has(file)) missing.push(file);
+
+            const templatePath = '.github/pull_request_template.md';
+            if (paths.has(templatePath)) {
+              const response = await github.rest.repos.getContent({...context.repo, path: templatePath, ref: sha});
+              const text = Buffer.from(response.data.content, 'base64').toString('utf8');
+              const headings = ['Objective','Related Issue','Scope','Changes','Tests','Historical Data Impact','Source Traceability Impact','Client Compatibility Impact','Known Limitations','Current HEAD','SOL Independent Review','Integration Decision'];
+              for (const heading of headings) {
+                if (!new RegExp(`^## ${heading}$`, 'm').test(text)) missing.push(`${templatePath}: heading "## ${heading}"`);
+              }
+            }
+            if (missing.length) core.setFailed(`Missing required repository elements:\n${missing.map(p => `- ${p}`).join('\n')}`);
