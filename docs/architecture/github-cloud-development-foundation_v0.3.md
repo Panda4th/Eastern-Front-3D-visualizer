@@ -1,343 +1,80 @@
+# 独ソ戦3D Historical Visualizer
+## GitHub Cloud 開発基盤 基礎設計 v0.3
 
-<!-- Page 1 -->
+**Status:** Reviewed Baseline Proposal  
+**Date:** 2026-08-12  
+**Architecture / Independent Review:** GPT SOL  
+**Upstream Foundation:** Project Foundation v0.1  
+**Additional Delivery Constraint:** Desktop + Smartphone Browser Support
 
-1
-独ソ戦
-3D Historical Visualizer
-GitHub Cloud
-開発基盤 基礎設計
-v0.3
-Status:
- Reviewed Baseline Proposal
-Date:
- 2026-08-12
-Architecture / Independent Review:
- GPT SOL
-Upstream Foundation:
- Project Foundation v0.1
-Additional Delivery Constraint:
- Desktop + Smartphone Browser Support
-0.
-結論
-本プロジェクトの
-GitHub
-開発基盤は、以下を基礎構成とする。
-•
-GitHub Free
-を前提
-とする。
-•
-Repository
-は
-GitHub Free Organization
-配下の
-Public Single Repository
+---
 
-を推奨する。
-•
-main
+## 0. 結論
 
-は
-Protected Branch
+本プロジェクトのGitHub開発基盤は、以下を基礎構成とする。
 
-とし、
-Pull Request
-と
-Required Status Checks
-を必須化する。
-•
-main
-への
-push / merge
-権限は、可能な限り
-Human Project Owner
-のみ
- に限定する。
-•
-開発
-branch
-は短命
-branch
-とし、
-develop
-等の長期統合
-branch
-は設けない。
-•
-Merge
-方式は
-Squash Merge
-のみ
- とする。
-•
-Codex
-が実装・テスト・修正
-を担当し、人間
-Project Owner
-はコーディング・デバッグを行わない。
-•
-Build / Test / Validation
-の正本は
-GitHub Actions
+- **GitHub Freeを前提**とする。
+- Repositoryは **GitHub Free Organization配下のPublic Single Repository** を推奨する。
+- `main` は **Protected Branch** とし、Pull RequestとRequired Status Checksを必須化する。
+- `main`へのpush / merge権限は、可能な限り **Human Project Ownerのみ** に限定する。
+- 開発branchは短命branchとし、`develop`等の長期統合branchは設けない。
+- Merge方式は **Squash Mergeのみ** とする。
+- **Codexが実装・テスト・修正**を担当し、人間Project Ownerはコーディング・デバッグを行わない。
+- Build / Test / Validationの正本は **GitHub Actions** とする。
+- **GitHub Codespacesは初期構成に含めない。**
+- GitHub PagesはProduction公開候補とするが、Technology Selection後に正式決定する。
+- Historical DataはApplication codeと同一Repositoryに配置するが、専用namespace・専用Validationを持つ設計とする。
+- Historical Source原本は、再配布可能性を確認できたもの以外はRepositoryに格納しない。
+- GitHub上のIssue / PR / Commit / Actions / Documentation / Historical DataをSingle Source of Truthとする。
+- 最終Web Applicationは **Desktop Browser + Smartphone Browser** を正式な利用対象とし、スマートフォン対応を後付け要件にしない。
+- SOL Independent ReviewはPR HEAD SHAに紐付け、HEAD変更時には失効させる。
+- AIによる自己承認・自己Mergeは禁止する。
+- 最終MergeはHuman Project Ownerが実行する。
 
-とする。
-•
-GitHub Codespaces
-は初期構成に含めない。
-•
-GitHub Pages
-は
-Production
-公開候補とするが、
-Technology Selection
-後に正式決定する。
-•
-Historical Data
-は
-Application code
-と同一
-Repository
-に配置するが、専用
-namespace
-・専用
-Validation
-を
-持つ設計とする。
-•
-Historical Source
-原本は、再配布可能性を確認できたもの以外は
-Repository
-に格納しない。
-•
-GitHub
-上の
-Issue / PR / Commit / Actions / Documentation / Historical Data
-を
-Single Source of Truth
-と
-する。
-•
-最終
-Web Application
-は
-Desktop Browser + Smartphone Browser
+---
 
-を正式な利用対象とし、スマートフォ
-ン対応を後付け要件にしない。
-•
-SOL Independent Review
-は
-PR HEAD SHA
-に紐付け、
-HEAD
-変更時には失効させる。
-•
-AI
-による自己承認・自己
-Merge
-は禁止する。
-•
-最終
-Merge
-は
-Human Project Owner
-が実行する。
-1.
-設計レビュー結果
+# 1. 設計レビュー結果
+
 前回案を、以下の追加前提に基づいて再レビューした。
-1.
-GitHub
-は有料プランを使用しない。
 
-<!-- Page 2 -->
+1. GitHubは有料プランを使用しない。
+2. Human Project Ownerはプログラミングを行わない。
+3. Human Project Ownerはデバッグ・Terminal操作を行わない。
+4. GitHub Cloud Onlyを維持する。
+5. AIが実装・検証・修正を担う。
+6. Historical Dataの史料トレーサビリティを最優先する。
 
-2
-2.
-Human Project Owner
-はプログラミングを行わない。
-3.
-Human Project Owner
-はデバッグ・
-Terminal
-操作を行わない。
-4.
-GitHub Cloud Only
-を維持する。
-5.
-AI
-が実装・検証・修正を担う。
-6.
-Historical Data
-の史料トレーサビリティを最優先する。
-1.1
-レビューで修正した主要点
-ID
-論点
-旧案
-修正版
-理由
-R-01
-Repository owner
-Personal account
-想
-定
-GitHub Free
-Organization
-推奨
-Public repo
-で
-main
-への
-push
-主体を限定
-しやすく、
-AI
-と
-Human
-の責任分離を
-強化できる
-R-02
-Repository visibility
-Private
-開始案
-Public
-GitHub Free
-で
-Protected Branch /
-Rulesets / Pages
-等を
-活用するため
-R-03
-Codespaces
-採用
-初期導入しない
-Human
-がコーディン
-グ・デバッグしないた
-め常設価値が低い
-R-04
-Human-only Merge
-運用ルール中心
-権限制御も併用
-AI
-が
-main
-を更新でき
-る余地を可能な限り排
-除するため
-R-05
-main protection
-Ruleset
-中心
-単一
-Branch
-Protection Rule
-を初
-期推奨
-対象が
-main
-のみであ
-り、より単純に必要要
-件を満たせる
-R-06
-PR Policy CI
-通常
-CI
-と同列
-Trusted Policy Gate
-として分離
-PR
-自身による
-Policy
-Workflow
-改変で
-Gate
-を自己無効化するリス
-クを下げる
-R-07
-Public repo contents
-一般的な注意のみ
-Public Repository
-Content Policy
-を追
-加
-Historical Source
-や
-Assets
-の再配布リスク
-を明示的に防ぐため
-R-08
-Human
-作業
-手動
-debug
-の余地あ
-り
-判断・承認・
-Merge
-に限定
-Project Owner
-にプロ
-グラミング技能を要求
-しないため
-R-09
-Native approval
-1 approval
-候補
-初期
-0 approvals
-SOL Review
-は
-GitHub
+## 1.1 レビューで修正した主要点
 
-native human review
-とは別の独立レビュー
-であるため
-R-10
-Production
-Pages
-有力
-後続決定
-Technology Selection
-前に
-static hosting
-適
-合性を確定しないため
-R-11
-Client target
-Desktop
-中心の暗黙前
-提
-Desktop +
-Smartphone
-Browser
-を正式対象
-後続の
-MVP
-・
-UI
-・技
-術選定・テストでスマ
-ホを初期制約として扱
-うため
-2. Foundation
-との整合性
-Project Foundation v0.1
-の以下の原則は変更しない。
+| ID | 論点 | 旧案 | 修正版 | 理由 |
+|---|---|---|---|---|
+| R-01 | Repository owner | Personal account想定 | **GitHub Free Organization推奨** | Public repoでmainへのpush主体を限定しやすく、AIとHumanの責任分離を強化できる |
+| R-02 | Repository visibility | Private開始案 | **Public** | GitHub FreeでProtected Branch / Rulesets / Pages等を活用するため |
+| R-03 | Codespaces | 採用 | **初期導入しない** | Humanがコーディング・デバッグしないため常設価値が低い |
+| R-04 | Human-only Merge | 運用ルール中心 | **権限制御も併用** | AIがmainを更新できる余地を可能な限り排除するため |
+| R-05 | main protection | Ruleset中心 | **単一Branch Protection Ruleを初期推奨** | 対象がmainのみであり、より単純に必要要件を満たせる |
+| R-06 | PR Policy CI | 通常CIと同列 | **Trusted Policy Gateとして分離** | PR自身によるPolicy Workflow改変でGateを自己無効化するリスクを下げる |
+| R-07 | Public repo contents | 一般的な注意のみ | **Public Repository Content Policyを追加** | Historical SourceやAssetsの再配布リスクを明示的に防ぐため |
+| R-08 | Human作業 | 手動debugの余地あり | **判断・承認・Mergeに限定** | Project Ownerにプログラミング技能を要求しないため |
+| R-09 | Native approval | 1 approval候補 | **初期0 approvals** | SOL ReviewはGitHub native human reviewとは別の独立レビューであるため |
+| R-10 | Production | Pages有力 | **後続決定** | Technology Selection前にstatic hosting適合性を確定しないため |
+| R-11 | Client target | Desktop中心の暗黙前提 | **Desktop + Smartphone Browserを正式対象** | 後続のMVP・UI・技術選定・テストでスマホを初期制約として扱うため |
 
-<!-- Page 3 -->
+---
 
-3
-2.1
-品質優先順位
-史実性 ＞ トレーサビリティ ＞ 理解しやすさ ＞ 網羅性 ＞ 視覚的演出
-GitHub
-基盤はこの優先順位を支援するための開発インフラであり、
-Historical Data
-の内容そのものを決定するもの
-ではない。
-2.2 AI
-責任分離
+# 2. Foundationとの整合性
+
+Project Foundation v0.1の以下の原則は変更しない。
+
+## 2.1 品質優先順位
+
+> 史実性 ＞ トレーサビリティ ＞ 理解しやすさ ＞ 網羅性 ＞ 視覚的演出
+
+GitHub基盤はこの優先順位を支援するための開発インフラであり、Historical Dataの内容そのものを決定するものではない。
+
+## 2.2 AI責任分離
+
+```text
 Requirements / Architecture
         ↓
       GPT SOL
@@ -357,10 +94,15 @@ Integration Decision
 Human Project Owner
         ↓
 Merge
+```
+
 実装者と独立レビュー担当を分離する。
-Codex
-による自己承認は禁止する。
-2.3 Single Source of Truth
+
+Codexによる自己承認は禁止する。
+
+## 2.3 Single Source of Truth
+
+```text
 GitHub
 ├── Repository
 ├── Issues
@@ -369,158 +111,79 @@ GitHub
 ├── Actions
 ├── Documentation
 └── Historical Data
-AI
-との会話ログは作業空間であり正本ではない。
-重要な決定・設計・レビュー・変更履歴は
-GitHub
-へ反映する。
-2.4 Target Client Constraint
-最終成果物である
-Web Application
-は、以下を正式な利用対象とする。
+```
+
+AIとの会話ログは作業空間であり正本ではない。
+
+重要な決定・設計・レビュー・変更履歴はGitHubへ反映する。
+
+## 2.4 Target Client Constraint
+
+最終成果物であるWeb Applicationは、以下を正式な利用対象とする。
+
+```text
 Desktop Browser
 +
 Smartphone Browser
-スマートフォン対応は、
-Desktop
-版完成後の追加対応ではなく、
-MVP
-・
-UI
-設計・
-Technology Selection
-・
-Test
-設計
-に最初から影響する上位制約
-として扱う。
-ただし本
-GitHub
-基盤設計フェーズでは、以下をまだ確定しない。
-•
-responsive layout
-の具体方式
-•
-mobile-first / desktop-first
-の実装方式
+```
 
-<!-- Page 4 -->
+スマートフォン対応は、Desktop版完成後の追加対応ではなく、**MVP・UI設計・Technology Selection・Test設計に最初から影響する上位制約**として扱う。
 
-4
-•
-smartphone
-向け
-3D
-描画品質
-•
-対応ブラウザの具体的
-version matrix
-•
-portrait / landscape
-の詳細仕様
-•
-touch gesture
-仕様
-•
-device
-別
-performance budget
+ただし本GitHub基盤設計フェーズでは、以下をまだ確定しない。
+
+- responsive layoutの具体方式
+- mobile-first / desktop-firstの実装方式
+- smartphone向け3D描画品質
+- 対応ブラウザの具体的version matrix
+- portrait / landscapeの詳細仕様
+- touch gesture仕様
+- device別performance budget
+
 これらは後続フェーズで決定する。
-本フェーズで固定するのは、
-**
-「
-PC
-専用の
-Web Application
-として設計してはならない」
-**
-という制約である。
-3. GitHub Cloud Only
-の運用定義
-本プロジェクトにおける
-GitHub Cloud Only
 
-を以下のように定義する。
-ソースコード、
-Historical Data
-、
-Issue
-、設計文書、変更履歴、
-Pull Request
-、テスト結果、
-Build
-、
-CI
-、レビュー記
-録、
-Deployment
-の正本および実行基盤を
-GitHub Cloud
-上に置き、
-Human Project Owner
-のローカル開発環境を必
-要としない。
-これは、すべての
-AI
-推論処理そのものが
-GitHub
-サーバー上で動作しなければならない、という意味ではない。
-AI
-が使用する実装環境は、
-GitHub Repository / Branch / PR
-と直接連携し、成果物を
-GitHub
-へ記録できるクラウド
-実行方式であることを要求する。
-3.1 Human Project Owner
-に要求しないもの
-以下を
-Human Project Owner
-の責務に含めない。
-•
-コーディング
-•
-Terminal
-操作
-•
-Git CLI
-操作
-•
-Build
-コマンド実行
-•
-Test
-コマンド実行
-•
-Debugger
-操作
-•
-CI
-ログの技術解析
-•
-Dependency
-問題の技術修正
-•
-Merge conflict
-の手動解消
-•
-開発環境構築
-これらは
-AI
-または
-GitHub Actions
-が担当する。
-4. Recommended GitHub Architecture
+本フェーズで固定するのは、**「PC専用のWeb Applicationとして設計してはならない」**という制約である。
+
+---
+
+# 3. GitHub Cloud Onlyの運用定義
+
+本プロジェクトにおける **GitHub Cloud Only** を以下のように定義する。
+
+> ソースコード、Historical Data、Issue、設計文書、変更履歴、Pull Request、テスト結果、Build、CI、レビュー記録、Deploymentの正本および実行基盤をGitHub Cloud上に置き、Human Project Ownerのローカル開発環境を必要としない。
+
+これは、すべてのAI推論処理そのものがGitHubサーバー上で動作しなければならない、という意味ではない。
+
+AIが使用する実装環境は、GitHub Repository / Branch / PRと直接連携し、成果物をGitHubへ記録できるクラウド実行方式であることを要求する。
+
+## 3.1 Human Project Ownerに要求しないもの
+
+以下をHuman Project Ownerの責務に含めない。
+
+- コーディング
+- Terminal操作
+- Git CLI操作
+- Buildコマンド実行
+- Testコマンド実行
+- Debugger操作
+- CIログの技術解析
+- Dependency問題の技術修正
+- Merge conflictの手動解消
+- 開発環境構築
+
+これらはAIまたはGitHub Actionsが担当する。
+
+---
+
+# 4. Recommended GitHub Architecture
+
+```mermaid
 flowchart TD
     H[Human Project Owner]
     O[Claude Code Opus<br/>Overall Lead]
     S[Claude Code Sonnet<br/>PMO]
-
-<!-- Page 5 -->
-
-5
     G[GPT SOL<br/>Architecture / Independent Review]
     C[Codex<br/>Implementation]
+
     ORG[GitHub Free Organization]
     I[Issues]
     B[Task Branch]
@@ -530,6 +193,7 @@ flowchart TD
     R[SOL Independent Review]
     M[Protected main]
     D[Deployment<br/>Later Phase]
+
     H --> ORG
     ORG --> I
     O --> I
@@ -546,167 +210,94 @@ flowchart TD
     O --> H
     H --> M
     M --> D
-5. Account / Organization Design
-5.1
-推奨
-GitHub Free Organization
-を作成し、その
-Organization
-配下に
-Public Repository
-を
-1
-つ作成する。
-理由
-Personal account
-直下の
-Public Repository
-でも
-Protected Branch
-は利用できるが、本プロジェクトでは
-AI
-と
-Human Project Owner
-の責任分離が重要である。
-GitHub Free Organization
-配下の
-Public Repository
-では、
-main
-に対して
-push
-可能な
-actor
-を限定できる構成が取
-りやすい。
+```
+
+---
+
+# 5. Account / Organization Design
+
+## 5.1 推奨
+
+**GitHub Free Organizationを作成し、そのOrganization配下にPublic Repositoryを1つ作成する。**
+
+### 理由
+
+Personal account直下のPublic RepositoryでもProtected Branchは利用できるが、本プロジェクトではAIとHuman Project Ownerの責任分離が重要である。
+
+GitHub Free Organization配下のPublic Repositoryでは、`main`に対してpush可能なactorを限定できる構成が取りやすい。
+
 これにより、
+
+```text
 AI
   └─ task branch / PR
-Human Project Owner
-  └─ protected main
-への最終
-Merge
-という境界を
-GitHub
-設定として表現できる。
-5.2 Organization Role
-Human Project Owner
-：
-•
-Organization Owner
-•
-Repository Admin
 
-<!-- Page 6 -->
-
-6
-AI
-：
-•
-Organization Owner
-にしない
-•
-Repository Admin
-にしない
-•
-Branch Protection bypass
-を与えない
-•
-Secrets
-管理権限を与えない
-•
-Repository
-削除権限を与えない
-5.3
-重要な制約
 Human Project Owner
-と
-AI
-が
-同一
-GitHub Identity /
-同一
-Owner credential
-を共有した場合、
-Human-only
-Merge
-を技術的に区別できない
-。
-したがって
-AI integration
-には、可能な限り独立した
-GitHub App / service identity /
-限定権限を使用する。
-具体的な
-AI
-ごとの
-GitHub
-接続方式は
-Repository
-構築時に確認する。
-6. Repository Design
-6.1 Repository
-数
-1 Repository
-Multi-repository
-は採用しない。
+  └─ protected mainへの最終Merge
+```
+
+という境界をGitHub設定として表現できる。
+
+## 5.2 Organization Role
+
+Human Project Owner：
+
+- Organization Owner
+- Repository Admin
+
+AI：
+
+- Organization Ownerにしない
+- Repository Adminにしない
+- Branch Protection bypassを与えない
+- Secrets管理権限を与えない
+- Repository削除権限を与えない
+
+## 5.3 重要な制約
+
+Human Project OwnerとAIが**同一GitHub Identity / 同一Owner credentialを共有した場合、Human-only Mergeを技術的に区別できない**。
+
+したがってAI integrationには、可能な限り独立したGitHub App / service identity /限定権限を使用する。
+
+具体的なAIごとのGitHub接続方式はRepository構築時に確認する。
+
+---
+
+# 6. Repository Design
+
+## 6.1 Repository数
+
+**1 Repository**
+
+Multi-repositoryは採用しない。
+
 理由：
-•
-Application
-と
-Historical Data
-の整合変更を同一
-PR
-で扱える。
-•
-Schema
-変更と
-Data migration
-を
-atomic
-に検証できる。
-•
-Source ID
-と
-Visualizer
-実装の
-Traceability
-が単純になる。
-•
-AI
-間の
-Issue / PR
-依存関係を増やさない。
-•
-MVP
-規模では分割メリットより運用コストが大きい。
-6.2 Visibility
-Public
-GitHub Free
-で
-main protection
-、
-Actions
-、
-Pages
-等を最大限活用するため。
-注意
-Public Repository
-であることと、
-Open Source License
-を付与することは別である。
-LICENSE
-は自動的に追加しない。
-ライセンス選定は、コード・
-Historical Dataset
-・
-Assets
-の公開方針を確認後に決定する。
 
-<!-- Page 7 -->
+- ApplicationとHistorical Dataの整合変更を同一PRで扱える。
+- Schema変更とData migrationをatomicに検証できる。
+- Source IDとVisualizer実装のTraceabilityが単純になる。
+- AI間のIssue / PR依存関係を増やさない。
+- MVP規模では分割メリットより運用コストが大きい。
 
-7
-7. Repository Directory Baseline
+## 6.2 Visibility
+
+**Public**
+
+GitHub Freeでmain protection、Actions、Pages等を最大限活用するため。
+
+### 注意
+
+Public Repositoryであることと、Open Source Licenseを付与することは別である。
+
+**LICENSEは自動的に追加しない。**
+
+ライセンス選定は、コード・Historical Dataset・Assetsの公開方針を確認後に決定する。
+
+---
+
+# 7. Repository Directory Baseline
+
+```text
 /
 ├── .github/
 │   ├── ISSUE_TEMPLATE/
@@ -736,100 +327,60 @@ Assets
 ├── scripts/
 │
 └── README.md
-7.1
-未確定領域
-以下は
-namespace
-のみ確保し、詳細設計を先行しない。
-•
-historical/data/
-•
-historical/sources/
-•
-historical/schemas/
-•
-historical/validation/
-具体的
-Schema
-、
-Source ID
-形式、
-Confirmed / Estimated / Unknown
-等は
-Historical Data Model
-フェーズで決定す
-る。
-8. Public Repository Content Policy
-Public Repository
-に
-commit
-する情報は、
-公開可能であることを前提
-とする。
-8.1 Repository
-に格納可能
-•
-Source Code
-•
-Tests
-•
-Documentation
-•
-Historical Dataset
-•
-Historical Source Metadata
+```
 
-<!-- Page 8 -->
+## 7.1 未確定領域
 
-8
-•
-Schema
-•
-Validation rules
-•
-自作
-Assets
-•
-Public Domain Assets
-•
-再配布許諾が確認できた
-Assets
-8.2
-原則格納禁止
-•
-購入した電子書籍
-•
-書籍
-PDF
-•
-無許可のスキャン史料
-•
-再配布条件不明の地図
-•
-再配布条件不明の写真
-•
-ライセンス不明
-Assets
-•
-API Key
-•
-Token
-•
-Password
-•
-Secret
-•
-個人情報
-•
-契約上非公開の情報
-8.3 Historical Source
-Source
-原本を
-Repository
-に置くことを
-Traceability
-の要件とはしない。
+以下はnamespaceのみ確保し、詳細設計を先行しない。
+
+- `historical/data/`
+- `historical/sources/`
+- `historical/schemas/`
+- `historical/validation/`
+
+具体的Schema、Source ID形式、Confirmed / Estimated / Unknown等はHistorical Data Modelフェーズで決定する。
+
+---
+
+# 8. Public Repository Content Policy
+
+Public Repositoryにcommitする情報は、**公開可能であることを前提**とする。
+
+## 8.1 Repositoryに格納可能
+
+- Source Code
+- Tests
+- Documentation
+- Historical Dataset
+- Historical Source Metadata
+- Schema
+- Validation rules
+- 自作Assets
+- Public Domain Assets
+- 再配布許諾が確認できたAssets
+
+## 8.2 原則格納禁止
+
+- 購入した電子書籍
+- 書籍PDF
+- 無許可のスキャン史料
+- 再配布条件不明の地図
+- 再配布条件不明の写真
+- ライセンス不明Assets
+- API Key
+- Token
+- Password
+- Secret
+- 個人情報
+- 契約上非公開の情報
+
+## 8.3 Historical Source
+
+Source原本をRepositoryに置くことをTraceabilityの要件とはしない。
+
 最低限、
+
+```text
 Source ID
 Title
 Author / Institution
@@ -837,247 +388,147 @@ Publication
 Page
 URL / Archive ID
 Access Metadata
+```
+
 等を通じて元史料へ逆引き可能な構造を作る。
+
 原本ファイルを格納する場合のみ、再配布可能性を確認する。
-9. Branch Strategy
-9.1 Branch
-種類
+
+---
+
+# 9. Branch Strategy
+
+## 9.1 Branch種類
+
+```text
 main
 ├── feature/<issue>-<slug>
 ├── fix/<issue>-<slug>
 ├── data/<issue>-<slug>
 ├── docs/<issue>-<slug>
 └── infra/<issue>-<slug>
+```
 
-<!-- Page 9 -->
+## 9.2 原則
 
-9
-9.2
-原則
-•
-main
-は常に統合済み正本。
-•
-task branch
-は最新
-main
-から作る。
-•
-原則として
-1 Issue = 1 branch = 1 PR
-。
-•
-branch
-は短命とする。
-•
-merge
-後に自動削除する。
-•
-develop
-は作らない。
-•
-release/*
-は初期導入しない。
-•
-hotfix/*
-専用フローは作らない。
-•
-長期統合
-branch
-は作らない。
-9.3
-理由
-AI
-開発では
-branch
-種類を増やすほど、
-•
-正本判断
-•
-merge
-順序
-•
-dependency
-管理
-•
-review
-対象
-SHA
+- `main`は常に統合済み正本。
+- task branchは最新`main`から作る。
+- 原則として1 Issue = 1 branch = 1 PR。
+- branchは短命とする。
+- merge後に自動削除する。
+- `develop`は作らない。
+- `release/*`は初期導入しない。
+- `hotfix/*`専用フローは作らない。
+- 長期統合branchは作らない。
+
+## 9.3 理由
+
+AI開発ではbranch種類を増やすほど、
+
+- 正本判断
+- merge順序
+- dependency管理
+- review対象SHA
+
 が複雑化する。
-本プロジェクトでは
-main
-中心の最小構成を採用する。
-10. Merge Strategy
-Repository
-設定：
+
+本プロジェクトではmain中心の最小構成を採用する。
+
+---
+
+# 10. Merge Strategy
+
+Repository設定：
+
+```text
 Squash Merge: ON
 Merge Commit: OFF
 Rebase Merge: OFF
 Auto Merge: OFF
 Automatically delete head branches: ON
-10.1 Squash
-採用理由
-•
-1 PR = 1 logical change
-として
-main
-履歴を残せる。
-•
-AI
-実装中の細かい修正
-commit
-を
-main
-へ持ち込まない。
-•
-Issue / PR / main commit
-の対応関係を追いやすい。
-•
-revert
-単位が明確になる。
+```
 
-<!-- Page 10 -->
+## 10.1 Squash採用理由
 
-10
-11. main Branch Protection
-初期構成では、複数
-Ruleset
-を組み合わせず、
-main
-専用の
-Branch Protection Rule
-を
-1
-つ使用する。
-11.1 main protection
-設定
-Setting
-初期値
-Require a pull request before merging
-ON
-Required approving reviews
-0
-Require status checks before merging
-ON
-Require branches to be up to date
-ON
-Require conversation resolution
-ON
-Restrict who can push to matching branches
-Human Project Owner
-のみ
-Allow force pushes
-OFF
-Allow deletions
-OFF
-Do not allow bypassing the above settings
-ON
-Require signed commits
-OFF
-Require linear history
-OFF
-Require merge queue
-OFF
-Require deployments before merging
-OFF
-11.2 Required approving reviews
-を
-0
-とする理由
-GitHub native approval
-と
-SOL Independent Review
-は役割が異なる。
-SOL
-が独立
-GitHub reviewer identity
-を持つことは現時点では確定していない。
-また
-Human Project Owner
-自身の
-PR
-に対して
-Human
-本人の
-approval
-を要求する設計は責任分離として意味を持
-たない。
+- 1 PR = 1 logical changeとしてmain履歴を残せる。
+- AI実装中の細かい修正commitをmainへ持ち込まない。
+- Issue / PR / main commitの対応関係を追いやすい。
+- revert単位が明確になる。
+
+---
+
+# 11. main Branch Protection
+
+初期構成では、複数Rulesetを組み合わせず、**`main`専用のBranch Protection Ruleを1つ使用する。**
+
+## 11.1 main protection設定
+
+| Setting | 初期値 |
+|---|---:|
+| Require a pull request before merging | **ON** |
+| Required approving reviews | **0** |
+| Require status checks before merging | **ON** |
+| Require branches to be up to date | **ON** |
+| Require conversation resolution | **ON** |
+| Restrict who can push to matching branches | **Human Project Ownerのみ** |
+| Allow force pushes | **OFF** |
+| Allow deletions | **OFF** |
+| Do not allow bypassing the above settings | **ON** |
+| Require signed commits | OFF |
+| Require linear history | OFF |
+| Require merge queue | OFF |
+| Require deployments before merging | OFF |
+
+## 11.2 Required approving reviewsを0とする理由
+
+GitHub native approvalとSOL Independent Reviewは役割が異なる。
+
+SOLが独立GitHub reviewer identityを持つことは現時点では確定していない。
+
+またHuman Project Owner自身のPRに対してHuman本人のapprovalを要求する設計は責任分離として意味を持たない。
+
 そのため、
+
+```text
 Native GitHub approval
 ≠
 SOL Independent Review
+```
+
 とする。
-SOL Review
-は別途
-Policy Gate
-で扱う。
-11.3 Human-only Merge
-Protected
-main
-への
-push
-可能
-actor
-を
-Human Project Owner
-に限定する。
-AI user / AI GitHub App
-を
-main
- push
-許可対象へ追加しない。
-AI
-には
-admin / bypass
-権限を与えない。
-これにより、
-AI
-は
-task branch
-と
-PR
-までを担当し、
-main
-更新は
-Human Project Owner
-へ残す。
 
-<!-- Page 11 -->
+SOL Reviewは別途Policy Gateで扱う。
 
-11
-Identity
-制約
-この技術的分離は、
-AI
-が
-Human Project Owner
-とは異なる
-GitHub identity
-を使用する場合に成立する。
-AI
-が
-Project Owner
-の
-owner session
-そのものを使用する場合は完全な技術分離ができない。
-そのため
-Repository
-構築時に
-AI integration
-方式を確認し、
-Owner credential
-を
-AI
-へ恒常的に渡さない。
-12. Pull Request Workflow
+## 11.3 Human-only Merge
+
+Protected `main`へのpush可能actorをHuman Project Ownerに限定する。
+
+AI user / AI GitHub Appを`main` push許可対象へ追加しない。
+
+AIにはadmin / bypass権限を与えない。
+
+これにより、AIはtask branchとPRまでを担当し、`main`更新はHuman Project Ownerへ残す。
+
+### Identity制約
+
+この技術的分離は、AIがHuman Project Ownerとは異なるGitHub identityを使用する場合に成立する。
+
+AIがProject Ownerのowner sessionそのものを使用する場合は完全な技術分離ができない。
+
+そのためRepository構築時にAI integration方式を確認し、Owner credentialをAIへ恒常的に渡さない。
+
+---
+
+# 12. Pull Request Workflow
+
+```text
 Issue
   ↓
 Opus: Priority / Go
   ↓
 Sonnet: Issue readiness / dependencies
   ↓
-Codex: task branch
-作成
+Codex: task branch作成
   ↓
 Codex: Implementation + Tests
   ↓
@@ -1095,400 +546,273 @@ SOL Independent Review
   ↓
 PASS / CHANGES_REQUIRED
   ↓
-[
-変更があれば
-]
-Codex
-修正
+[変更があれば]
+Codex修正
   ↓
-HEAD SHA
-変更
+HEAD SHA変更
   ↓
-SOL Review
-失効
+SOL Review失効
   ↓
-再
-CI
+再CI
   ↓
-SOL
-再
-Review
+SOL再Review
   ↓
 Opus Integration Decision
   ↓
 Human Project Owner
   ↓
 Squash Merge
-13. Pull Request Template
+```
+
+---
+
+# 13. Pull Request Template
+
+```markdown
 ## Objective
+
 ## Related Issue
+
 ## Scope
+
 ## Changes
 
-<!-- Page 12 -->
-
-12
 ## Tests
+
 ## Historical Data Impact
 NONE / YES
+
 ## Source Traceability Impact
 NONE / YES
+
 ## Client Compatibility Impact
 NONE / DESKTOP / SMARTPHONE / BOTH
+
 ## Known Limitations
+
 ## Current HEAD
+
 ---
+
 ## SOL Independent Review
+
 SOL review commit:
 SOL review decision:
 BLOCKER:
 MUST FIX:
 Current HEAD:
+
 ---
+
 ## Integration Decision
+
 Opus decision:
 Decision HEAD:
-Historical Data Impact
-が
-YES
-の場合：
+```
+
+Historical Data Impactが`YES`の場合：
+
+```markdown
 ## Historical Change Detail
+
 Affected Source IDs:
 Source / Evidence:
 Traceability Impact:
 Validation Result:
 Known Uncertainty:
-14. SOL Independent Review
-14.1 Review identity
-SOL Review
-は
-特定
-PR HEAD SHA
-に対する独立レビュー
-とする。
-PASS
-条件：
+```
+
+---
+
+# 14. SOL Independent Review
+
+## 14.1 Review identity
+
+SOL Reviewは**特定PR HEAD SHAに対する独立レビュー**とする。
+
+PASS条件：
+
+```text
 SOL review commit == actual PR HEAD SHA
 Current HEAD == actual PR HEAD SHA
 SOL review decision == PASS
 BLOCKER == 0
 MUST FIX == 0
-14.2 HEAD
-変更
-SOL PASS
-後に新
-commit
-が
-push
-された場合：
+```
+
+## 14.2 HEAD変更
+
+SOL PASS後に新commitがpushされた場合：
+
+```text
 Reviewed HEAD = abc123
 New HEAD      = def456
+```
 
-<!-- Page 13 -->
-
-13
 となるため、
+
+```text
 SOL REVIEW = STALE / INVALID
+```
+
 と判定する。
-再レビューを完了するまで
-Merge
-不可。
-14.3 Identity
-の限界
-PR
-本文だけでは、
-「
-SOL review decision: PASS
-」
-を書いた
-actor
-が本当に
-SOL
-であることまで完全には証明できない。
+
+再レビューを完了するまでMerge不可。
+
+## 14.3 Identityの限界
+
+PR本文だけでは、
+
+> 「SOL review decision: PASS」
+
+を書いたactorが本当にSOLであることまで完全には証明できない。
+
 したがって初期構成では、
-1.
-SHA
-一致
-2.
-Policy Gate
-3.
-SOL
-独立レビュー
-4.
-Opus
-統括判断
-5.
-Human-only Merge
+
+1. SHA一致
+2. Policy Gate
+3. SOL独立レビュー
+4. Opus統括判断
+5. Human-only Merge
+
 を組み合わせる。
-将来、
-SOL
-専用
-GitHub App / reviewer identity
-を用意できた場合は、
-review actor identity validation
-を追加検討す
-る。
-15. CI/CD Foundation
-CI
-は段階導入する。
-Visualization
-技術や
-package manager
-を現段階で仮定しない。
-15.1 Phase 0 — GitHub Foundation
+
+将来、SOL専用GitHub App / reviewer identityを用意できた場合は、review actor identity validationを追加検討する。
+
+---
+
+# 15. CI/CD Foundation
+
+CIは段階導入する。
+
+Visualization技術やpackage managerを現段階で仮定しない。
+
+## 15.1 Phase 0 — GitHub Foundation
+
 初期導入：
-A.
-policy-gate.yml
-役割：
-•
-PR
-本文必須欄確認
-•
-Related Issue
-確認
-•
-Current HEAD
-整合確認
-•
-SOL review commit
-整合確認
-•
-PASS
-時
-BLOCKER = 0
-確認
-•
-PASS
-時
-MUST FIX = 0
-確認
-•
-Historical Data Impact
-欄確認
 
-<!-- Page 14 -->
+### A. `policy-gate.yml`
 
-14
-•
-Source Traceability Impact
-欄確認
-B.
-repository-validation.yml
 役割：
-•
-Repository
-基本構造
-•
-必須文書
-•
-基本
-format
-•
-Foundation / Governance
-整合性チェック
-Technology Selection
-前のため、特定言語の
-build/test
-は要求しない。
-16. Trusted PR Policy Gate
-PR Policy Gate
-は通常の
-Application CI
-と分離する。
-16.1
-問題
-通常の
-pull_request
- workflow
-だけを使用すると、
-PR
-自身が
-Policy Workflow
-を変更するケースを考慮する必要が
-ある。
-Governance Gate
-が
-PR
-側の変更に直接依存すると、実装者が
-Gate
-自体を変更できる構造になり得る。
-16.2
-設計
-Policy Gate
-は
-base branch
-側の信頼済み
-Workflow
-定義を使用する構成
-とする。
-候補として
-pull_request_target
-を使用できる。
-ただし、
-pull_request_target
-は権限の強い
-context
-になり得るため、以下を厳守する。
-MUST
-•
-PR code
-を
-checkout
-しない。
-•
-PR branch
-上の
-script
-を実行しない。
-•
-PR
-由来の実行可能コードを呼ばない。
-•
-Secret
-を渡さない。
-•
-permissions
-を明示的な最小
-read
-権限とする。
-•
-GitHub event metadata / API
-上の
-PR metadata
-だけを検証する。
-•
-PR title / body
-等を
-shell command
-へ未処理で埋め込まない。
-つまり
-Policy Gate
-は、
+
+- PR本文必須欄確認
+- Related Issue確認
+- Current HEAD整合確認
+- SOL review commit整合確認
+- PASS時BLOCKER = 0確認
+- PASS時MUST FIX = 0確認
+- Historical Data Impact欄確認
+- Source Traceability Impact欄確認
+
+### B. `repository-validation.yml`
+
+役割：
+
+- Repository基本構造
+- 必須文書
+- 基本format
+- Foundation / Governance整合性チェック
+
+Technology Selection前のため、特定言語のbuild/testは要求しない。
+
+---
+
+# 16. Trusted PR Policy Gate
+
+PR Policy Gateは通常のApplication CIと分離する。
+
+## 16.1 問題
+
+通常の`pull_request` workflowだけを使用すると、PR自身がPolicy Workflowを変更するケースを考慮する必要がある。
+
+Governance GateがPR側の変更に直接依存すると、実装者がGate自体を変更できる構造になり得る。
+
+## 16.2 設計
+
+Policy Gateは**base branch側の信頼済みWorkflow定義を使用する構成**とする。
+
+候補として`pull_request_target`を使用できる。
+
+ただし、`pull_request_target`は権限の強いcontextになり得るため、以下を厳守する。
+
+### MUST
+
+- PR codeをcheckoutしない。
+- PR branch上のscriptを実行しない。
+- PR由来の実行可能コードを呼ばない。
+- Secretを渡さない。
+- `permissions`を明示的な最小read権限とする。
+- GitHub event metadata / API上のPR metadataだけを検証する。
+- PR title / body等をshell commandへ未処理で埋め込まない。
+
+つまりPolicy Gateは、
+
+```text
 PR Metadata
 PR HEAD SHA
 Issue relation
 Review fields
+```
+
 だけを見る。
 
-<!-- Page 15 -->
+Application codeのBuild / Testは通常の`pull_request` CIで実行する。
 
-15
-Application code
-の
-Build / Test
-は通常の
-pull_request
- CI
-で実行する。
-16.3
-分離
+## 16.3 分離
+
+```text
 Trusted Policy Gate
-  └─ Governance / metadata
-のみ
+  └─ Governance / metadataのみ
+
 Application CI
   └─ PR code / tests / build
-この
-2
-つを混ぜない。
-16.4 Governance-sensitive paths
-以下は通常の
-Feature / Data
-変更より強く扱う。
+```
+
+この2つを混ぜない。
+
+## 16.4 Governance-sensitive paths
+
+以下は通常のFeature / Data変更より強く扱う。
+
+```text
 .github/workflows/**
 .github/ISSUE_TEMPLATE/**
 .github/pull_request_template.md
 docs/foundation/**
 docs/governance/**
-原則：
-•
-infra/*
+```
 
-または明示的な
-governance
-変更
-PR
-として分離する。
-•
-通常
-Feature PR
-へ便乗させない。
-•
-変更理由と影響範囲を
-PR
-本文へ明記する。
-•
-SOL Independent Review
-を必須とする。
-•
-Opus Integration Decision
-を必須とする。
-•
-Human Project Owner
-が最終
-Merge
-する。
-•
-policy-gate.yml
-の変更は、その
-PR
-自身の
-Policy Gate
-判定ロジックへ即時反映させない。
-base branch
-上の信頼済み定義で当該
-PR
-を評価し、
-Human Merge
-後に将来の
-PR
-へ反映する。
-これにより、実装
-AI
-が通常の機能変更に紛れてガバナンスや
-CI Gate
-自体を弱めることを防ぐ。
-17. Application CI
-Technology Selection
-後に追加する。
-Desktop / Smartphone
-の双方を正式な利用対象とするため、後続の
-CI / Test
-設計では、少なくとも以下を検討対象
-に含める。
-•
-responsive layout regression
-•
-smartphone viewport
-での主要画面確認
-•
-touch
-操作を前提とした主要
-interaction
-•
-mobile browser
-での
-build/runtime compatibility
-•
-device
-性能差を考慮した
-performance validation
-ただし具体的な
-browser matrix
-、
-E2E tool
-、
-viewport
-値、
-performance threshold
-は
-Technology Selection
-後に決
-定する。
+原則：
+
+- `infra/*` または明示的なgovernance変更PRとして分離する。
+- 通常Feature PRへ便乗させない。
+- 変更理由と影響範囲をPR本文へ明記する。
+- SOL Independent Reviewを必須とする。
+- Opus Integration Decisionを必須とする。
+- Human Project Ownerが最終Mergeする。
+- `policy-gate.yml`の変更は、そのPR自身のPolicy Gate判定ロジックへ即時反映させない。base branch上の信頼済み定義で当該PRを評価し、Human Merge後に将来のPRへ反映する。
+
+これにより、実装AIが通常の機能変更に紛れてガバナンスやCI Gate自体を弱めることを防ぐ。
+
+---
+
+# 17. Application CI
+
+Technology Selection後に追加する。
+
+Desktop / Smartphoneの双方を正式な利用対象とするため、後続のCI / Test設計では、少なくとも以下を検討対象に含める。
+
+- responsive layout regression
+- smartphone viewportでの主要画面確認
+- touch操作を前提とした主要interaction
+- mobile browserでのbuild/runtime compatibility
+- device性能差を考慮したperformance validation
+
+ただし具体的なbrowser matrix、E2E tool、viewport値、performance thresholdはTechnology Selection後に決定する。
+
 基本構造：
 
-<!-- Page 16 -->
-
-16
+```text
 Install
   ↓
 Lint
@@ -1500,84 +824,75 @@ Unit Test
 Build
   ↓
 CI / required
-Ruleset / Branch Protection
-から参照する
-Required Check
-名は安定させる。
+```
+
+Ruleset / Branch Protectionから参照するRequired Check名は安定させる。
+
 例：
+
+```text
 policy / pr-policy
 ci / required
-Workflow
-内部
-job
-を変更しても、外部
-Required Check
-名を不用意に変えない。
-18. Historical Data Validation
-Historical Data Model
-確定後に導入する。
+```
+
+Workflow内部jobを変更しても、外部Required Check名を不用意に変えない。
+
+---
+
+# 18. Historical Data Validation
+
+Historical Data Model確定後に導入する。
+
 候補：
-•
-Schema Validation
-•
-Source ID Validation
-•
-Source Traceability Validation
-•
-Broken Reference Validation
-•
-Duplicate Source ID Validation
-•
-Orphaned Historical Data Validation
-•
-Required Evidence Validation
-•
-Historical numeric change validation
-•
-Source deletion / rename detection
-18.1 Historical Data
-変更ルール
-historical/**
-を変更する
-PR
-は必ず、
+
+- Schema Validation
+- Source ID Validation
+- Source Traceability Validation
+- Broken Reference Validation
+- Duplicate Source ID Validation
+- Orphaned Historical Data Validation
+- Required Evidence Validation
+- Historical numeric change validation
+- Source deletion / rename detection
+
+## 18.1 Historical Data変更ルール
+
+`historical/**`を変更するPRは必ず、
+
+```text
 Historical Data Impact = YES
 Source / Evidence
 Affected Source IDs
 Traceability Impact
+```
+
 を要求する。
-18.2 Source ID
-Source ID
-は将来的に恒久
-identifier
-として扱う方向を推奨する。
-ただし形式・
-immutability
-の詳細は
-Historical Data Model / Source Acceptance Policy
-フェーズで正式決定する。
 
-<!-- Page 17 -->
+## 18.2 Source ID
 
-17
-19. Issue Management
-Issue Template
-は過剰分割せず
-2
-系統とする。
-19.1 General Work Item
+Source IDは将来的に恒久identifierとして扱う方向を推奨する。
+
+ただし形式・immutabilityの詳細はHistorical Data Model / Source Acceptance Policyフェーズで正式決定する。
+
+---
+
+# 19. Issue Management
+
+Issue Templateは過剰分割せず2系統とする。
+
+## 19.1 General Work Item
+
 対象：
-•
-Feature
-•
-Bug
-•
-Design
-•
-Infrastructure
-•
-Documentation
+
+- Feature
+- Bug
+- Design
+- Infrastructure
+- Documentation
+
 必須欄：
+
+```text
 Objective
 Scope
 Requirements
@@ -1586,13 +901,18 @@ Acceptance Criteria
 Dependencies
 Source / Evidence
 Out of Scope
-19.2 Historical Work Item
+```
+
+## 19.2 Historical Work Item
+
 対象：
-•
-Historical Data
-•
-Research
+
+- Historical Data
+- Research
+
 追加必須欄：
+
+```text
 Historical Objective
 Target Period
 Target Geography
@@ -1601,474 +921,255 @@ Source / Evidence
 Source Tier
 Known Uncertainty
 Traceability Impact
-19.3 Stale Issue / PR
-自動
-stale-close
-は導入しない。
+```
+
+## 19.3 Stale Issue / PR
+
+自動stale-closeは導入しない。
+
 歴史調査は長期間停止していても無効になったとは限らない。
-Sonnet PMO
-が状態を確認し、
-•
-Active
-•
-Blocked
-•
-Superseded
-•
-Closed
+
+Sonnet PMOが状態を確認し、
+
+- Active
+- Blocked
+- Superseded
+- Closed
+
 を判断可能な状態へ整理する。
 
-<!-- Page 18 -->
+Close判断は必要に応じてOpusへエスカレーションする。
 
-18
-Close
-判断は必要に応じて
-Opus
-へエスカレーションする。
-20. AI Role & Permission Matrix
-20.1 Responsibility
-操作
-Opus
-Sonnet
-SOL
-Codex
-Human
-全体方針
-◎
-△
-設計助言
-×
-最終
-Issue
-起票
-○
-◎
-提案
-△
-○
-Issue
-管理
-○
-◎
-△
-×
-○
-branch
-作成
-×
-△
-×
-◎
-○
-実装
-×
-×
-×
-◎
-×
-Test
-実装
-×
-×
-×
-◎
-×
-PR
-作成
-×
-△
-×
-◎
-○
-PR metadata
-管理
-△
-◎
-Review
-欄
-自
-PR
-○
-CI
-確認
-○
-◎
-Review
-時
-修正時
-結果確認
-Independent
-Review
-×
-×
-◎
-禁止
-△
-Integration
-判断
-◎
-△
-助言
-×
-最終
-Merge
-×
-×
-×
-×
-◎
-Branch
-Protection
-変更
-×
-×
-×
-×
-◎
-Secrets
-管理
-×
-×
-×
-×
-◎
-20.2 Desired GitHub Permissions
-Human Project Owner
-•
-Organization Owner
-•
-Repository Admin
-•
-Merge
-•
-Branch protection settings
-•
-Secrets settings
-•
-Repository settings
-Claude Code Opus
-原則：
-•
-Contents: Read
-•
-Issues: Read / Write as needed
-•
-Pull Requests: Read / comment/update as needed
-•
-Actions: Read
-•
-Administration: None
+---
 
-<!-- Page 19 -->
+# 20. AI Role & Permission Matrix
 
-19
-•
-Secrets: None
-•
-Merge: None
-Claude Code Sonnet
+## 20.1 Responsibility
+
+| 操作 | Opus | Sonnet | SOL | Codex | Human |
+|---|---:|---:|---:|---:|---:|
+| 全体方針 | ◎ | △ | 設計助言 | × | 最終 |
+| Issue起票 | ○ | ◎ | 提案 | △ | ○ |
+| Issue管理 | ○ | ◎ | △ | × | ○ |
+| branch作成 | × | △ | × | ◎ | ○ |
+| 実装 | × | × | × | ◎ | × |
+| Test実装 | × | × | × | ◎ | × |
+| PR作成 | × | △ | × | ◎ | ○ |
+| PR metadata管理 | △ | ◎ | Review欄 | 自PR | ○ |
+| CI確認 | ○ | ◎ | Review時 | 修正時 | 結果確認 |
+| Independent Review | × | × | ◎ | 禁止 | △ |
+| Integration判断 | ◎ | △ | 助言 | × | 最終 |
+| Merge | × | × | × | × | ◎ |
+| Branch Protection変更 | × | × | × | × | ◎ |
+| Secrets管理 | × | × | × | × | ◎ |
+
+## 20.2 Desired GitHub Permissions
+
+### Human Project Owner
+
+- Organization Owner
+- Repository Admin
+- Merge
+- Branch protection settings
+- Secrets settings
+- Repository settings
+
+### Claude Code Opus
+
 原則：
-•
-Contents: Read
-•
-Issues: Read / Write
-•
-Pull Requests: Read / Write metadata
-•
-Actions: Read
-•
-Administration: None
-•
-Secrets: None
-•
-Merge: None
-GPT SOL
+
+- Contents: Read
+- Issues: Read / Write as needed
+- Pull Requests: Read / comment/update as needed
+- Actions: Read
+- Administration: None
+- Secrets: None
+- Merge: None
+
+### Claude Code Sonnet
+
 原則：
-•
-Contents: Read
-•
-Issues: Read
-•
-Pull Requests: Read
-•
-Actions: Read
-•
-Review record write: only if supported by dedicated integration
-•
-Contents Write: None
-•
-Administration: None
-•
-Secrets: None
-•
-Merge: None
-Codex
+
+- Contents: Read
+- Issues: Read / Write
+- Pull Requests: Read / Write metadata
+- Actions: Read
+- Administration: None
+- Secrets: None
+- Merge: None
+
+### GPT SOL
+
+原則：
+
+- Contents: Read
+- Issues: Read
+- Pull Requests: Read
+- Actions: Read
+- Review record write: only if supported by dedicated integration
+- Contents Write: None
+- Administration: None
+- Secrets: None
+- Merge: None
+
+### Codex
+
 必要範囲：
-•
-Contents: task branch
-への
-Write
-•
-Pull Requests: Read / Write
-•
-Issues: Read
-•
-Actions: Read
-•
-Administration: None
-•
-Secrets: None
-•
-main push permission: None
-•
-Merge: None
-具体的
-scope
-名称は、利用する
-GitHub App / AI integration
-の仕様確認後にマッピングする。
 
-<!-- Page 20 -->
+- Contents: task branchへのWrite
+- Pull Requests: Read / Write
+- Issues: Read
+- Actions: Read
+- Administration: None
+- Secrets: None
+- main push permission: None
+- Merge: None
 
-20
-21. Codex Development Strategy
-Human Project Owner
-は開発環境を操作しない。
-Implementation agent
-である
-Codex
-は、
-1.
-GitHub Issue
-を読む。
-2.
-task branch
-を作成する。
-3.
-実装する。
-4.
-Test
-を作成する。
-5.
-branch
-へ
-commit / push
-する。
-6.
-PR
-を作成する。
-7.
-GitHub Actions
-結果を確認する。
-8.
-失敗時に修正する。
-9.
-PASS
-状態を
-SOL
-へ引き渡す。
+具体的scope名称は、利用するGitHub App / AI integrationの仕様確認後にマッピングする。
+
+---
+
+# 21. Codex Development Strategy
+
+Human Project Ownerは開発環境を操作しない。
+
+Implementation agentであるCodexは、
+
+1. GitHub Issueを読む。
+2. task branchを作成する。
+3. 実装する。
+4. Testを作成する。
+5. branchへcommit / pushする。
+6. PRを作成する。
+7. GitHub Actions結果を確認する。
+8. 失敗時に修正する。
+9. PASS状態をSOLへ引き渡す。
+
 というクラウドベース運用を要求する。
-21.1 Test
-の正本
-Codex
-内部で実施したテスト結果のみでは
-Merge
-条件を満たさない。
-GitHub Actions
-上で再現された
-PASS
-を正本とする。
+
+## 21.1 Testの正本
+
+Codex内部で実施したテスト結果のみではMerge条件を満たさない。
+
+**GitHub Actions上で再現されたPASSを正本とする。**
+
+```text
 Codex local/internal test
         ↓
 参考
+
 GitHub Actions
         ↓
 Authoritative CI Result
-22. Codespaces Strategy
-Decision
-INITIAL: NOT ADOPTED
-Codespaces
-は初期必須構成から外す。
-理由
-Human Project Owner
-が以下を行わないため。
-•
-coding
-•
-interactive debugging
-•
-Terminal
-•
-manual build
-•
-environment setup
+```
 
-<!-- Page 21 -->
+---
 
-21
-また、
-Build / Test / Validation
-は
-GitHub Actions
-で実行する。
-将来導入条件
+# 22. Codespaces Strategy
+
+## Decision
+
+**INITIAL: NOT ADOPTED**
+
+Codespacesは初期必須構成から外す。
+
+## 理由
+
+Human Project Ownerが以下を行わないため。
+
+- coding
+- interactive debugging
+- Terminal
+- manual build
+- environment setup
+
+また、Build / Test / ValidationはGitHub Actionsで実行する。
+
+## 将来導入条件
+
 以下の問題が実際に発生した場合だけ再検討する。
-•
-AI
-実装環境と
-GitHub Actions
-の再現差異が重大化した。
-•
-3D
-描画の対話的デバッグ環境が必須になった。
-•
-GitHub Actions
-ログだけでは障害再現が困難になった。
-•
-共通
-devcontainer
-が開発効率に明確な利益をもたらす。
-その場合も、
-Codespaces
-を
-Human Project Owner
-が操作することは前提にしない。
-23. Security Baseline
-23.1 Authentication
-•
-Human Project Owner
-は
-2FA
-を使用する。
-•
-Human Owner credential
-を
-AI
-へ恒常共有しない。
-•
-AI
-は可能な限り独立
-GitHub App /
-限定
-identity
-を利用する。
-•
-PAT
-が必要な場合は
-fine-grained
-かつ最小
-scope
-とする。
-•
-classic PAT
-は原則使用しない。
-23.2 GitHub Actions
-Workflow
-ごとに
-permissions
-を明示する。
+
+- AI実装環境とGitHub Actionsの再現差異が重大化した。
+- 3D描画の対話的デバッグ環境が必須になった。
+- GitHub Actionsログだけでは障害再現が困難になった。
+- 共通devcontainerが開発効率に明確な利益をもたらす。
+
+その場合も、CodespacesをHuman Project Ownerが操作することは前提にしない。
+
+---
+
+# 23. Security Baseline
+
+## 23.1 Authentication
+
+- Human Project Ownerは2FAを使用する。
+- Human Owner credentialをAIへ恒常共有しない。
+- AIは可能な限り独立GitHub App /限定identityを利用する。
+- PATが必要な場合はfine-grainedかつ最小scopeとする。
+- classic PATは原則使用しない。
+
+## 23.2 GitHub Actions
+
+Workflowごとに`permissions`を明示する。
+
 原則：
-permissions
-:
 
-contents
-:
- read
-追加権限は必要な
-Workflow
-にのみ付与する。
-23.3 Third-party Actions
-外部
-Action
-を使用する場合は、
-•
-必要性を確認する。
-•
-GitHub
-公式
-Action
-を優先する。
-•
-第三者
-Action
-は
-full commit SHA pinning
-を原則とする。
-•
-不要な
-Action
-を増やさない。
-23.4 Secrets
-•
-Secret
-を
-source
-へ
-commit
-しない。
-•
-PR CI
-へ
-Secrets
-を不用意に渡さない。
-•
-Public Repository
-であることを前提に扱う。
+```yaml
+permissions:
+  contents: read
+```
 
-<!-- Page 22 -->
+追加権限は必要なWorkflowにのみ付与する。
 
-22
-•
-Secret
-が不要な設計を優先する。
-23.5 Security Features
-Public Repository
-で無料利用可能な
-GitHub security
-機能は可能な範囲で有効化する。
+## 23.3 Third-party Actions
+
+外部Actionを使用する場合は、
+
+- 必要性を確認する。
+- GitHub公式Actionを優先する。
+- 第三者Actionはfull commit SHA pinningを原則とする。
+- 不要なActionを増やさない。
+
+## 23.4 Secrets
+
+- Secretをsourceへcommitしない。
+- PR CIへSecretsを不用意に渡さない。
+- Public Repositoryであることを前提に扱う。
+- Secretが不要な設計を優先する。
+
+## 23.5 Security Features
+
+Public Repositoryで無料利用可能なGitHub security機能は可能な範囲で有効化する。
+
 候補：
-•
-Dependabot Alerts
-•
-Secret Scanning
-•
-Code Scanning
-•
-Dependency Review
-ただし
-package manager
-等に依存する設定は
-Technology Selection
-後に追加する。
-24. Historical Data Protection Strategy
-Historical Data
-は通常コードより強い変更規則を持つ。
-24.1
-防止対象
-•
-根拠なしデータ追加
-•
-Source ID
-破壊
-•
-Source
-削除
-•
-Source
-参照切断
-•
-数値だけの上書き
-•
-出典情報の欠落
-•
-Schema
-不整合
-•
-史料上確認できない値の
-Confirmed
-扱い
-24.2 GitHub
-上の防護層
+
+- Dependabot Alerts
+- Secret Scanning
+- Code Scanning
+- Dependency Review
+
+ただしpackage manager等に依存する設定はTechnology Selection後に追加する。
+
+---
+
+# 24. Historical Data Protection Strategy
+
+Historical Dataは通常コードより強い変更規則を持つ。
+
+## 24.1 防止対象
+
+- 根拠なしデータ追加
+- Source ID破壊
+- Source削除
+- Source参照切断
+- 数値だけの上書き
+- 出典情報の欠落
+- Schema不整合
+- 史料上確認できない値のConfirmed扱い
+
+## 24.2 GitHub上の防護層
+
+```text
 Historical Work Item
         ↓
 data/* branch
@@ -2082,519 +1183,314 @@ SOL Independent Review
 Opus Integration Decision
         ↓
 Human Merge
-24.3 Code
-と
-Data
-の
-Repository
-分離
+```
+
+## 24.3 CodeとDataのRepository分離
+
 初期段階では分離しない。
+
 理由：
 
-<!-- Page 23 -->
-
-23
-Schema
-変更
+```text
+Schema変更
 +
-Validator
-変更
+Validator変更
 +
 Historical Data migration
-を同一
-PR
-で
-atomic
-に検証できることの価値が高いため。
-将来
-Repository size
-、
-license
-、権限分離等に明確な問題が発生した場合のみ再評価する。
-25. Deployment / Preview Strategy
-25.1 Production
-GitHub Pages
-を第一候補とする。
-ただし正式採用は
-Technology Selection
-後。
+```
+
+を同一PRでatomicに検証できることの価値が高いため。
+
+将来Repository size、license、権限分離等に明確な問題が発生した場合のみ再評価する。
+
+---
+
+# 25. Deployment / Preview Strategy
+
+## 25.1 Production
+
+GitHub Pagesを第一候補とする。
+
+ただし正式採用はTechnology Selection後。
+
 条件：
+
+```text
 Application build
       ↓
-Static browser assets
-として公開可能
+Static browser assetsとして公開可能
+```
+
 であること。
-25.2 PR Preview
+
+## 25.2 PR Preview
+
 初期導入しない。
+
 理由：
-•
-Visualization
-技術未選定
-•
-外部
-SaaS
-を増やさない
-•
-MVP
-前に必要性が未確認
-•
-CI artifacts
-だけで足りる可能性がある
-3D
-画面レビューが高頻度化し、
-URL
-ベース
-PR Preview
-の利益が明確になった場合だけ再設計する。
-25.3 Development Preview
-Human Project Owner
-向け開発環境としては用意しない。
-AI
-が必要とする一時的
-Preview
-方法は
-Technology Selection
-後に実装方式と合わせて検討する。
-26. GitHub Artifacts / Releases
-GitHub Actions Artifacts
-必要時採用
 
-<!-- Page 24 -->
+- Visualization技術未選定
+- 外部SaaSを増やさない
+- MVP前に必要性が未確認
+- CI artifactsだけで足りる可能性がある
 
-24
+3D画面レビューが高頻度化し、URLベースPR Previewの利益が明確になった場合だけ再設計する。
+
+## 25.3 Development Preview
+
+Human Project Owner向け開発環境としては用意しない。
+
+AIが必要とする一時的Preview方法はTechnology Selection後に実装方式と合わせて検討する。
+
+---
+
+# 26. GitHub Artifacts / Releases
+
+## GitHub Actions Artifacts
+
+**必要時採用**
+
 用途：
-•
-Build output
-•
-Test report
-•
-Validation report
-Historical Source archive
-には使用しない。
-GitHub Releases
+
+- Build output
+- Test report
+- Validation report
+
+Historical Source archiveには使用しない。
+
+## GitHub Releases
+
 初期導入しない。
-以下の
-milestone
-発生後に採用検討する。
-•
-MVP v0.1
-•
-Public dataset baseline
-•
-Stable release
-27. Initial Repository Setup Sequence
+
+以下のmilestone発生後に採用検討する。
+
+- MVP v0.1
+- Public dataset baseline
+- Stable release
+
+---
+
+# 27. Initial Repository Setup Sequence
+
 実際の構築フェーズでは以下の順序で行う。
-1.
-GitHub Free Organization
-作成
-2.
-Human Project Owner
-を
-Organization Owner
-とする
-3.
-Public Repository
-作成
-4.
-Default branch=
-main
-5.
-Squash Merge
-のみ有効化
-6.
-Merge Commit
-無効化
-7.
-Rebase Merge
-無効化
-8.
-Auto Merge
-無効化
-9.
-Automatically delete head branches
-有効化
-10.
-Project Foundation v0.1
-登録
-11.
-本
-GitHub Cloud Development Foundation
-登録
-12.
-docs/
-基本構造作成
-13.
-.github/
-基本構造作成
-14.
-Issue Templates
-作成
-15.
-Pull Request Template
-作成
-16.
-Trusted Policy Gate
-作成
-17.
-Repository Validation
-作成
-18.
-main
- Branch Protection
-作成
-19.
-PR
-必須化
-20.
-Required Status Check
-設定
 
-<!-- Page 25 -->
+1. GitHub Free Organization作成
+2. Human Project OwnerをOrganization Ownerとする
+3. Public Repository作成
+4. Default branch=`main`
+5. Squash Mergeのみ有効化
+6. Merge Commit無効化
+7. Rebase Merge無効化
+8. Auto Merge無効化
+9. Automatically delete head branches有効化
+10. Project Foundation v0.1登録
+11. 本GitHub Cloud Development Foundation登録
+12. `docs/`基本構造作成
+13. `.github/`基本構造作成
+14. Issue Templates作成
+15. Pull Request Template作成
+16. Trusted Policy Gate作成
+17. Repository Validation作成
+18. `main` Branch Protection作成
+19. PR必須化
+20. Required Status Check設定
+21. Conversation Resolution必須化
+22. Force Push禁止確認
+23. main deletion禁止確認
+24. Branch Protection bypass禁止
+25. `main` push actorをHuman Project Ownerに限定
+26. AI identities / GitHub integration方式確認
+27. AIにAdmin / Owner権限がないことを確認
+28. AIにmain push / Merge能力がないことを確認
+29. Actions token権限最小化
+30. Security機能有効化
+31. Public Repository Content Policy確認
+32. Historical namespaceのみ作成
+33. テスト用PR作成
+34. CI失敗時にMergeできないことを確認
+35. SOL review SHA不一致時にPolicy Gateが失敗することを確認
+36. Human Project Owner以外がmainを更新できないことを確認
+37. Merge後branch自動削除確認
+38. Opusが基盤完成状態を確認
+39. GitHub開発基盤フェーズ完了をGitHubへ記録
+40. 次フェーズへ移行
 
-25
-21.
-Conversation Resolution
-必須化
-22.
-Force Push
-禁止確認
-23.
-main deletion
-禁止確認
-24.
-Branch Protection bypass
-禁止
-25.
-main
- push actor
-を
-Human Project Owner
-に限定
-26.
-AI identities / GitHub integration
-方式確認
-27.
-AI
-に
-Admin / Owner
-権限がないことを確認
-28.
-AI
-に
-main push / Merge
-能力がないことを確認
-29.
-Actions token
-権限最小化
-30.
-Security
-機能有効化
-31.
-Public Repository Content Policy
-確認
-32.
-Historical namespace
-のみ作成
-33.
-テスト用
-PR
-作成
-34.
-CI
-失敗時に
-Merge
-できないことを確認
-35.
-SOL review SHA
-不一致時に
-Policy Gate
-が失敗することを確認
-36.
-Human Project Owner
-以外が
-main
-を更新できないことを確認
-37.
-Merge
-後
-branch
-自動削除確認
-38.
-Opus
-が基盤完成状態を確認
-39.
-GitHub
-開発基盤フェーズ完了を
-GitHub
-へ記録
-40.
-次フェーズへ移行
-28. Human Project Owner Operating Model
-Project Owner
-が通常行う
-GitHub
-操作は最小限とする。
-日常
-•
-Issue / PR
-状況確認
-•
-AI
-からの判断要求への回答
-•
-SOL review
-結果確認
-•
-Opus integration decision
-確認
-Merge
-時
+---
+
+# 28. Human Project Owner Operating Model
+
+Project Ownerが通常行うGitHub操作は最小限とする。
+
+## 日常
+
+- Issue / PR状況確認
+- AIからの判断要求への回答
+- SOL review結果確認
+- Opus integration decision確認
+
+## Merge時
+
 確認対象：
+
+```text
 Required Checks = PASS
 SOL Decision = PASS
 SOL Review HEAD = Current PR HEAD
 BLOCKER = 0
 MUST FIX = 0
 Opus Integration Decision = APPROVE
-上記を満たす場合に
-Human Project Owner
-が
-Squash Merge
-を実行する。
+```
 
-<!-- Page 26 -->
+上記を満たす場合にHuman Project OwnerがSquash Mergeを実行する。
 
-26
-Human Project Owner
-がコードを読んで技術的正当性を自力で判定することを
-Merge
-条件とはしない。
+Human Project Ownerがコードを読んで技術的正当性を自力で判定することをMerge条件とはしない。
+
 技術的正当性は、
+
+```text
 Codex Tests
 +
 GitHub Actions
 +
 SOL Independent Review
+```
+
 によって担保する。
-29. Open Decisions
+
+---
+
+# 29. Open Decisions
+
 以下は本フェーズで確定しない。
-項目
-決定時期
-Organization
-名
-Repository Setup
-Repository
-名
-Repository Setup
-各
-AI
-の具体的
-GitHub identity / App
-Repository Setup
-LICENSE
-公開・権利方針確定後
-Frontend language
-Technology Selection
-Framework
-Technology Selection
-3D Library
-Technology Selection
-Package Manager
-Technology Selection
-Historical Schema
-Historical Data Model
-Source ID
-形式
-Historical Data Model
-Confirmed / Estimated / Unknown
-Historical Data Model
-Source Acceptance
-詳細基準
-Source Policy
-Historical Validators
-詳細
-Data Model
-後
-GitHub Pages
-正式採用
-Technology Selection
-後
-PR Preview
-Visualization
-実装後
-対応
-Desktop / Smartphone browser matrix
-Technology Selection / MVP UI
-設計
-Smartphone viewport / orientation / touch
-詳細仕様
-MVP UI
-設計
-Mobile performance budget
-Technology Selection / Performance
-設計
-GitHub Releases
-MVP milestone
-前
-30. Explicit Non-Adoption
+
+| 項目 | 決定時期 |
+|---|---|
+| Organization名 | Repository Setup |
+| Repository名 | Repository Setup |
+| 各AIの具体的GitHub identity / App | Repository Setup |
+| LICENSE | 公開・権利方針確定後 |
+| Frontend language | Technology Selection |
+| Framework | Technology Selection |
+| 3D Library | Technology Selection |
+| Package Manager | Technology Selection |
+| Historical Schema | Historical Data Model |
+| Source ID形式 | Historical Data Model |
+| Confirmed / Estimated / Unknown | Historical Data Model |
+| Source Acceptance詳細基準 | Source Policy |
+| Historical Validators詳細 | Data Model後 |
+| GitHub Pages正式採用 | Technology Selection後 |
+| PR Preview | Visualization実装後 |
+| 対応Desktop / Smartphone browser matrix | Technology Selection / MVP UI設計 |
+| Smartphone viewport / orientation / touch詳細仕様 | MVP UI設計 |
+| Mobile performance budget | Technology Selection / Performance設計 |
+| GitHub Releases | MVP milestone前 |
+
+---
+
+# 30. Explicit Non-Adoption
+
 現時点では以下を採用しない。
-•
-Private Repository
-•
-GitHub
-有料プラン
-•
-Multi Repository
-•
-develop branch
 
-<!-- Page 27 -->
+- Private Repository
+- GitHub有料プラン
+- Multi Repository
+- develop branch
+- Git Flow
+- Merge Queue
+- Auto Merge
+- AIによるMerge
+- Codespaces常設
+- github.devをHuman開発環境とする構成
+- Humanによる手動debug
+- HumanによるTerminal操作
+- Microservices
+- GitHub Projects必須化
+- 外部有料Cloud
+- 外部Preview SaaS
+- Codespaces Prebuild
+- GitHub Packages
+- Historical Schema先行設計
+- Visualization技術先行選定
+- 自動stale-close
 
-27
-•
-Git Flow
-•
-Merge Queue
-•
-Auto Merge
-•
-AI
-による
-Merge
-•
-Codespaces
-常設
-•
-github.dev
-を
-Human
-開発環境とする構成
-•
-Human
-による手動
-debug
-•
-Human
-による
-Terminal
-操作
-•
-Microservices
-•
-GitHub Projects
-必須化
-•
-外部有料
-Cloud
-•
-外部
-Preview SaaS
-•
-Codespaces Prebuild
-•
-GitHub Packages
-•
-Historical Schema
-先行設計
-•
-Visualization
-技術先行選定
-•
-自動
-stale-close
-31. Design Change Conditions
+---
+
+# 31. Design Change Conditions
+
 現在の結論を変更する条件を明示する。
-Public → Private
+
+## Public → Private
+
 以下のいずれかが発生した場合：
-•
-公開できないコードが必要になる。
-•
-Historical Data
-自体に非公開要件が発生する。
-•
-License / source
-条件により公開
-Repository
-が不適切になる。
-•
-GitHub
-有料プラン使用を許容する方針へ変更される。
-Single Repository → Multi Repository
+
+- 公開できないコードが必要になる。
+- Historical Data自体に非公開要件が発生する。
+- License / source条件により公開Repositoryが不適切になる。
+- GitHub有料プラン使用を許容する方針へ変更される。
+
+## Single Repository → Multi Repository
+
 以下が実証された場合のみ：
-•
-Repository size
-が実運用上問題になる。
-•
-Historical source licensing
-上、物理分離が必要になる。
-•
-明確に異なる
-access control
-が必要になる。
-•
-CI / deployment independence
-の利益が運用コストを上回る。
 
-<!-- Page 28 -->
+- Repository sizeが実運用上問題になる。
+- Historical source licensing上、物理分離が必要になる。
+- 明確に異なるaccess controlが必要になる。
+- CI / deployment independenceの利益が運用コストを上回る。
 
-28
-Codespaces
-導入
+## Codespaces導入
+
 以下が発生した場合：
-•
-Actions
-だけでは再現不能なデバッグ問題が継続する。
-•
-AI
-間の開発環境差異が重大な問題になる。
-•
-interactive 3D debugging
-が必須になる。
-GitHub Pages
-不採用
-Technology Selection
-後、
-static hosting
-要件を満たせない場合。
-32. Self Review
+
+- Actionsだけでは再現不能なデバッグ問題が継続する。
+- AI間の開発環境差異が重大な問題になる。
+- interactive 3D debuggingが必須になる。
+
+## GitHub Pages不採用
+
+Technology Selection後、static hosting要件を満たせない場合。
+
+---
+
+# 32. Self Review
+
+```text
 BLOCKER:
 0
+
 MUST FIX:
 0
+
 SHOULD FIX:
 1
-Repository Setup
-開始前に、
-各
-AI
-が
-GitHub
-上でどの
-identity / GitHub App / credential
-を使用するか確認し、
-Human Project Owner
-の
-Owner/Admin identity
-と分離できることを確認する。
+
+Repository Setup開始前に、
+各AIがGitHub上でどのidentity / GitHub App / credentialを使用するか確認し、
+Human Project OwnerのOwner/Admin identityと分離できることを確認する。
+
 NICE TO HAVE:
 3
-1. SOL
-専用
-GitHub review identity
-2. Historical Validation report
-の可視化
-3. Visualization
-実装後の
-PR Preview
+
+1. SOL専用GitHub review identity
+2. Historical Validation reportの可視化
+3. Visualization実装後のPR Preview
+
 FINAL DECISION:
 PASS
-33. Final Architecture Decision
-本設計を、
-Project Foundation v0.1
-を変更せず具体化する
-GitHub Cloud Development Foundation v0.3
+```
+
+---
+
+# 33. Final Architecture Decision
+
+本設計を、Project Foundation v0.1を変更せず具体化する
+
+**GitHub Cloud Development Foundation v0.3**
+
 として採用候補とする。
+
 最終構成：
+
+```text
 GitHub Free Organization
         ↓
 Public Single Repository
@@ -2605,10 +1501,6 @@ Issue
         ↓
 AI task branch
         ↓
-
-<!-- Page 29 -->
-
-29
 Pull Request
         ↓
 Trusted Policy Gate
@@ -2625,20 +1517,11 @@ Squash Merge
 main
         ↓
 Deployment
-(Technology Selection
-後
-)
+(Technology Selection後)
+```
+
 本構成の目的は、
-Human Project Owner
-にプログラミング技能を要求せず、
-AI
-による設計・実装・検証・独立レビューを
-GitHub
-上で
-追跡可能にし、
-Historical Data
-の史料トレーサビリティを破壊せず、
-Desktop / Smartphone
-の双方を正式な出力先
-として、安全かつ再現可能な開発を継続できる状態を作ること
+
+> Human Project Ownerにプログラミング技能を要求せず、AIによる設計・実装・検証・独立レビューをGitHub上で追跡可能にし、Historical Dataの史料トレーサビリティを破壊せず、Desktop / Smartphoneの双方を正式な出力先として、安全かつ再現可能な開発を継続できる状態を作ること
+
 である。
