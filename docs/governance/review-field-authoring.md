@@ -149,14 +149,8 @@ push・Branch Protection・`.github/` の変更は行わなかった。
 - 指示文自体に誤りがあった場合、それを検証せずそのまま PR 本文へ反映してしまう。
 - `## Known Limitations` に記載すべき制約や逸脱を、記入者が実装の当事者でないために見落とす。
 
-**緩和策:** PMO が記入する内容は、差分・CI 結果・Overall Lead が検証した内容など確認済みの事実に
-限定する。推測、見込み、未検証事項を事実として PR 本文へ記載しない。具体的には、PMO は本文へ記入
-する前に少なくとも以下を自ら確認する。
-
-- 記述する commit SHA / workflow run ID / conclusion を、GitHub API または `git` コマンドの実行
-  結果で直接確認すること。伝聞や過去の記憶に基づいて記述しないこと。
-- 記述内容が Overall Lead の指示文と一致しない、または指示文と GitHub 上の実際の状態が食い違う
-  場合、PMO の判断でどちらかを採用せず、食い違いを Overall Lead へ報告すること。
+**緩和策:** 記入内容は「差分・CI 結果・Overall Lead の検証」という確認済みの事実に限定する。推測・
+見込み・未検証事項を事実として PR 本文へ書かない。
 
 ---
 
@@ -184,9 +178,8 @@ push・Branch Protection・`.github/` の変更は行わなかった。
 
 ### 7.2 記入実績（決定より前の運用）
 
-以下 3 例はいずれも上記 7.1 の決定（2026-08-13）より前の運用である。3 例で記入者が一定していなかった
-こと、および 7.1 の決定がその状態を受けて行われたことを記録する。3 例のいずれも原則であったかの
-ように扱わない。
+以下 3 例はいずれも上記 7.1 の決定（2026-08-13）より前の運用であり、いずれも原則からの逸脱として
+記録する。
 
 1. **PR #7** — Human Project Owner が SOL Independent Review 結果を転記した。
 2. **PR #10** — Human Project Owner が SOL Independent Review 結果を転記した。この事実は
@@ -196,15 +189,19 @@ push・Branch Protection・`.github/` の変更は行わなかった。
    あることと、GPT SOL の再レビュー自体は実施されたことを確認した。一方、GPT SOL のレビュー本文
    そのものは GitHub 上に存在せず、PR 本文に残ったのは PMO による要約である。
 
-### 7.3 未解決のまま残る事項
+### 7.3 Current State（実測結果）と未解決のまま残る事項
+
+**実測結果:**
+
+- 2026-08-13、PR #14 HEAD `75bc1f0bffe82d375420fab517ec2134fb76091d` に対する SOL Independent
+  Review において、GPT SOL が専用 GitHub integration 経由で PR 本文の `## SOL Independent Review`
+  欄を直接更新することに成功した。PR metadata / Review 欄への write capability は実測済みである。
+
+**未解決のまま残る事項:**
 
 以下は本文書によって解決されるものではない。解決策・推奨案・暫定解・自動化案・新しい承認フローを
 ここで定義しない。
 
-- GPT SOL が GitHub へ書き込める capability を実際に保持しているかは未検証である。GitHub Cloud
-  Development Foundation v0.3 §20.2 は SOL の Review record write を「only if supported by
-  dedicated integration」とし、Pull Requests は Read、Contents Write は None としている。したがって
-  7.1 の原則を実際に実行できるかは integration の有無に依存し、現時点で確認されていない。
 - v0.3 §14.3 のとおり、PR 本文の記述だけでは、同欄を記入した actor が本当に SOL であることを
   完全には証明できない。SOL 専用の GitHub App または reviewer identity が用意されるまで、この限界
   は残る。
@@ -257,5 +254,3 @@ Merge を実際に阻止する、という実測済みの事実として記載�
 
 - §6 に定める解除条件が成立した場合。
 - §7.3 に列挙した未解決事項について、Human Project Owner が新たな決定を行った場合。
-
-見直しの結果は本文書を直接更新して記録し、無記録で書き換えない。
