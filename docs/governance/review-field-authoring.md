@@ -226,6 +226,7 @@ push・Branch Protection・`.github/` の変更は行わなかった。
 
 未解決であり、今後 Human Project Owner の判断および integration の整備が必要な状態である。本 Issue
 では identity 分離の解決策を確定しない。
+
 ---
 
 ## 8. R-7. Required Status Checks と Merge 阻止の関係
