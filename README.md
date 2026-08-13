@@ -7,6 +7,8 @@
 - [Project Foundation v0.1](docs/foundation/project-foundation_v0.1.md)
 - [GitHub Cloud Development Foundation v0.3](docs/architecture/github-cloud-development-foundation_v0.3.md)
 - [Merge Authority Policy](docs/governance/merge-authority.md)
+- [AI Role and Communication Policy](docs/governance/ai-role-and-communication-policy.md)
+- [Review Field Authoring Policy](docs/governance/review-field-authoring.md)
 - [ADR 0001: Identity Separation Option C](docs/decisions/0001-identity-separation-option-c.md)
 
 史実データの schema、Source ID、および確度表現は後続の Historical Data Model フェーズで決定します。それまでは [`historical/`](historical/) の namespace のみを保持し、推測データを追加しません。
