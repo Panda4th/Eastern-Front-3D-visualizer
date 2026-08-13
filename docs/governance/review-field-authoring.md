@@ -171,14 +171,20 @@ push・Branch Protection・`.github/` の変更は行わなかった。
 
 - 原則として、SOL Independent Review 結果は GPT SOL 自身が PR 本文の `## SOL Independent Review`
   欄へ記入する。
+- GPT SOL は実行環境上、PR コメントを直接投稿できない。この制約に基づき、レビュー本体は
+  Human Project Owner が GPT SOL の出力を PR コメントへ転記する。この Human Project Owner による
+  転記を正規経路とする。
 - 例外として、必要な場合に限り、Human Project Owner の明示的な許可を得たうえで PMO
-  （Claude Code Sonnet）が転記してよい。PMO が自らの判断で同欄へ記入してはならない。
+  （Claude Code Sonnet）が `## SOL Independent Review` 欄へ転記してよい。PMO が自らの判断で
+  同欄へ記入してはならない。
 - この決定は GitHub Cloud Development Foundation v0.3 §20.1 の権限表「PR metadata 管理:
   SOL = Review 欄」と整合する。新たな役割変更ではなく、v0.3 が定めた原則の確認である。
 
 ### 7.2 記入実績（決定より前の運用）
 
-以下 3 例はいずれも上記 7.1 の決定（2026-08-13）より前の運用であり、いずれも原則からの逸脱として
+以下 3 例はいずれも上記 7.1 の決定（2026-08-13）より前の運用であり、実施時点ではいずれも原則からの
+逸脱として記録する。2026-08-13 の Q-3 決定により Human Project Owner による転記は決定後の正規経路と
+なったが、以下の過去実績を遡及的に正規経路へ再分類しない。決定の前後で位置づけが変わった事実として
 記録する。
 
 1. **PR #7** — Human Project Owner が SOL Independent Review 結果を転記した。
@@ -196,6 +202,12 @@ push・Branch Protection・`.github/` の変更は行わなかった。
 - 2026-08-13、PR #14 HEAD `75bc1f0bffe82d375420fab517ec2134fb76091d` に対する SOL Independent
   Review において、GPT SOL が専用 GitHub integration 経由で PR 本文の `## SOL Independent Review`
   欄を直接更新することに成功した。PR metadata / Review 欄への write capability は実測済みである。
+- GPT SOL は実行環境上、PR コメントを直接投稿できない。この制約は実測済みであり、PR 本文の
+  Review 欄への write capability とは別に扱う。
+- 同じ PR #14 HEAD に対する `CHANGES_REQUIRED` / `MUST FIX 2` のレビューでは、PR 本文に判定と
+  件数のみが記録され、指摘 2 件の内容は PR コメント、review threads、reviews、Issue #11 コメントを
+  含む GitHub 上のどこにも存在しなかった。これは、レビュー本体が GitHub native な記録として
+  残らない制約の実害である。
 
 **未解決のまま残る事項:**
 
@@ -203,12 +215,17 @@ push・Branch Protection・`.github/` の変更は行わなかった。
 ここで定義しない。
 
 - v0.3 §14.3 のとおり、PR 本文の記述だけでは、同欄を記入した actor が本当に SOL であることを
-  完全には証明できない。SOL 専用の GitHub App または reviewer identity が用意されるまで、この限界
-  は残る。
-- 例外パス（PMO 転記）が用いられる限り、SOL がレビューを実施した事実の GitHub native な記録が
-  残らないという制約は解消しない。
+  完全には証明できない。ADR 0001 のとおり本 Repository の AI identity は Human Project Owner と
+  同一の `Panda4th` に統合されており、SOL 専用の GitHub App または reviewer identity が用意される
+  まで、この限界は残る。
+- SOL は経路を問わず PR コメントを直接投稿できないため、`## SOL Independent Review` 欄に記録される
+  判定サマリ（decision / BLOCKER 数 / MUST FIX 数）を超えるレビュー本体は、Human Project Owner の
+  手動転記によってのみ GitHub へ記録される。この制約は PMO 転記の例外パス使用時に限定されず、
+  現行の実行環境では恒久的に成立する。Human Project Owner による転記が行われなければ、PR #14 で
+  観測されたとおりレビュー本体の GitHub native な記録は残らない。
 
-未解決であり、今後 Human Project Owner の判断および integration の整備が必要な状態である。
+未解決であり、今後 Human Project Owner の判断および integration の整備が必要な状態である。Issue #13
+では identity 分離の解決策を確定しない。
 
 ---
 
