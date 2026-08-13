@@ -27,13 +27,13 @@ PR #10 のコメントとしてのみ存在しており、Issue #1 は既に clo
 
 ### 手順
 
-1. Codex が実装し branch を push、Draft PR を作成する。
-2. Overall Lead（Claude Code Opus）が実装を検証し、PR 本文に記入すべき内容を指示文として作成する。
-3. PMO が指示文に従って PR 本文を置換する。
+1. Codex が実装し、task branch を push、Draft PR を作成する。
+2. Overall Lead（Claude Code Opus）が実装を検証し、PR 本文へ記入すべき内容を指示文として作成する。
+3. PMO（Claude Code Sonnet）がその指示文に従い PR 本文を置換する。
 4. `policy / pr-policy` の判定を確認する。
-5. 以降は通常フロー（SOL Independent Review → Integration Decision → Human Merge）とする。
+5. 通常フロー（SOL Independent Review → Integration Decision → Human Merge）へ進む。
 
-### PMO が記入してよい欄
+### PMO が記入してよい通常欄
 
 - Objective
 - Related Issue
@@ -47,22 +47,77 @@ PR #10 のコメントとしてのみ存在しており、Issue #1 は既に clo
 - Current HEAD
 - Historical Change Detail
 
-上記に含まれない欄（`## SOL Independent Review` / `## Integration Decision`）は本改訂の対象外である
-（§4 参照）。
+この改訂は「誰が通常欄を記入するか」という運用割り当ての変更であり、レビュー判断そのものの権限
+移動ではない。`## SOL Independent Review` / `## Integration Decision` は対象外である（§4 参照）。
 
 ---
 
 ## 3. R-2. 改訂の理由
 
-Codex は既存 PR の本文を編集できない。実行環境に Git remote がなく GitHub CLI も未認証であるため、
-PR 本文更新・コメント投稿・Actions 結果確認ができない。
+### 3.1 Codex の能力報告
 
-根拠として、PR #10 における Codex 自身の能力報告を参照する。
+PR #10 の既存本文修正を依頼された際、Codex は以下を報告した。
 
-- https://github.com/Panda4th/Eastern-Front-3D-visualizer/pull/10#issuecomment-5276669700
+- 実行環境に Git remote が設定されていなかった。
+- GitHub CLI が未認証だった。
+- そのため GitHub 上の既存 PR 本文を更新できなかった。
+- PR コメントを投稿できなかった。
+- GitHub Actions の実行結果を確認できなかった。
 
-この能力欠如により、PR #10 の `policy / pr-policy` が FAIL した（run 31672928350 / run 31673085845）。
-これが本改訂の直接の契機である。
+Codex はその際、指示に従い以下を実施しなかった。コード・ファイルの変更、commit の追加、Draft の
+解除、Merge、`main` への push、新規 PR の作成。結果として PR #10 の本文置換と、更新後の workflow
+run ID / conclusion の報告は未完了となった。これは能力上の制約であり、指示違反として扱われたもの
+ではない。
+
+参照: https://github.com/Panda4th/Eastern-Front-3D-visualizer/pull/10#issuecomment-5276669700
+
+### 3.2 PR #10 の CI FAIL 原因
+
+Overall Lead が PR #10 HEAD `2a10466ac8b770c09a3b39839b13b309771a666c` を検証した。実装差分
+（`Project_Foundation_v0.1.pdf` / `GitHub_Cloud_開発基盤_基礎設計_v0.3.pdf` の削除 2 件のみ）は
+Scope に適合していた。
+
+一方、PR 作成時点の本文は connector によって自動生成されており、Pull Request Template に準拠せず
+`### Motivation` / `### Description` / `### Testing` の 3 見出しのみで構成されていた。Policy Gate
+が要求する固定見出しを 1 つも満たしていなかった。
+
+確認された workflow:
+
+| run | event | mode | conclusion |
+|---|---|---|---|
+| `31672928350` | `opened`（draft=false） | Merge Ready Mode | `failure` |
+| `31673085845` | `converted_to_draft` | Draft Mode | `failure` |
+| `31672928343` | — | `repository / validation` | `success` |
+
+`policy / pr-policy` FAIL の直接原因は、PR 本文が Template の必要構造を満たしていないことであり、
+実装差分そのものの不備ではなかった。Codex が既存 PR 本文を修正できない環境制約により、Codex 自身
+ではこの状態を回復できなかったことが、本改訂の直接の契機となった。
+
+### 3.3 Human Project Owner の判断と PMO への指示
+
+Human Project Owner は 2026-08-13、「PMO が PR 本文を修正し、修正指示文は Overall Lead が作成する」
+という運用を承認した。Overall Lead は PMO に対し、PR #10 の body のみを完全置換する自己完結型の
+指示を作成した。PMO には以下が要求された。
+
+- PR HEAD を置換直前に再確認する。
+- PR body のみを変更する（commit の追加、Draft 解除、Merge、`main` への push、Branch Protection・
+  `.github/` の変更はいずれも行わない）。
+- PR title / base / head / labels を変更しない。
+- Template の固定見出しを保持する。
+- `## SOL Independent Review` / `## Integration Decision` に判断値を書かない。
+- 更新後の `policy / pr-policy` を確認する。
+
+### 3.4 PMO の完了実績
+
+PMO は置換直前に PR #10 HEAD が `2a10466ac8b770c09a3b39839b13b309771a666c` であることを確認した
+上で、指示された Template 準拠本文へ body を置換した。コード変更・追加 commit・Draft 解除・Merge・
+push・Branch Protection・`.github/` の変更は行わなかった。
+
+本文更新（`edited` イベント）により再実行された `policy / pr-policy` は、run `31677294512`
+（Draft Mode）で `success` となった。`repository / validation`（run `31672928343`）も `success` の
+ままだった。
+
+この実績を、Codex から PMO へ通常欄の記入責任を移した理由の具体例として記録する。
 
 ---
 
@@ -70,71 +125,93 @@ PR 本文更新・コメント投稿・Actions 結果確認ができない。
 
 以下は本改訂の対象外であり、変更していない。
 
-- `## SOL Independent Review` 欄には、GPT SOL による実レビュー結果のみを記録する。
-- `## Integration Decision` 欄には、Claude Opus による実統括判断のみを記録する。
-- Foundation 文書（Project Foundation v0.1 / GitHub Cloud Development Foundation v0.3）は
-  一切変更していない。
-- Merge 権限（[`docs/governance/merge-authority.md`](./merge-authority.md)）は一切変更していない。
-
-本改訂は「誰が記入するか」の運用割り当てにすぎない。
+- `## SOL Independent Review` は GPT SOL による実レビュー結果を記録する欄である。
+- `## Integration Decision` は Claude Code Opus による実統括判断を記録する欄である。
+- Project Foundation v0.1 は本改訂で変更していない。
+- GitHub Cloud Development Foundation v0.3 は本改訂で変更していない。
+- [`docs/governance/merge-authority.md`](./merge-authority.md) の Merge 権限は変更していない。
+- 最終 Merge は Human Project Owner のみが行う。
+- 本改訂は通常の PR 本文記入作業の担当変更であり、Independent Review / Integration Decision /
+  Merge の判断権限を変更するものではない。
 
 ---
 
 ## 5. R-4. 負の側面と緩和策
 
-本改訂には利点だけでなく負の側面がある。
+本改訂には利点だけでなく負の側面がある。利点のみを記載しない。
 
-- **負の側面:** 実装者による自己申告ではなくなる代わりに、記入者（PMO）が実装内容を誤記する経路が
-  生まれる。PMO は §2 の手順で実装内容を直接検証したわけではない指示文に従って記入するため、
-  指示文自体の誤りをそのまま PR 本文へ反映してしまう可能性がある。
-- **緩和策:** PMO が PR 本文へ記入する内容は、「差分・CI 結果・Overall Lead の検証」という
-  確認済みの事実に限定する。推測・見込み・未検証の記述を PR 本文へ書かない。
+**負の側面:** PR 本文が実装者自身による自己申告ではなくなることで、別の記入者（PMO）が実装内容を
+誤って記述する経路が新たに生じる。PMO は実装差分を自ら書いたわけではない、または指示文に従って
+記入するため、以下が具体的に起こり得る。
+
+- 実際の diff にはない変更を記述する、または実際の diff にある変更を書き漏らす。
+- 実際には FAIL している `policy / pr-policy` を `success` と記述する、またはその逆を記述する。
+- 指示文自体に誤りがあった場合、それを検証せずそのまま PR 本文へ反映してしまう。
+- `## Known Limitations` に記載すべき制約や逸脱を、記入者が実装の当事者でないために見落とす。
+
+**緩和策:** PMO が記入する内容は、差分・CI 結果・Overall Lead が検証した内容など確認済みの事実に
+限定する。推測、見込み、未検証事項を事実として PR 本文へ記載しない。具体的には、PMO は本文へ記入
+する前に少なくとも以下を自ら確認する。
+
+- 記述する commit SHA / workflow run ID / conclusion を、GitHub API または `git` コマンドの実行
+  結果で直接確認すること。伝聞や過去の記憶に基づいて記述しないこと。
+- 記述内容が Overall Lead の指示文と一致しない、または指示文と GitHub 上の実際の状態が食い違う
+  場合、PMO の判断でどちらかを採用せず、食い違いを Overall Lead へ報告すること。
 
 ---
 
 ## 6. R-5. 解除条件
 
 - 実装 AI が自力で Template 準拠の PR 本文を作成・更新できる環境が整った場合、本改訂を解除し、
-  原則（実装者が自ら記入する）へ戻す。
-- 解除の判断は Human Project Owner が行う。
+  原則である「実装者が自ら記入する」方式へ戻すことができる。解除は自動的には行われない。
+- 解除の判断を行うのは Human Project Owner である。
 
 ---
 
 ## 7. R-6. SOL Independent Review 欄の記入責任
 
+記入責任者については決定済みの事項として、それ以外の制約については未解決のまま記録する。新しい
+判断をここで作らない。
+
 ### 7.1 決定済み事項（2026-08-13 / Human Project Owner 決定）
 
-- 原則として、SOL Independent Review 結果は GPT SOL 自身が PR 本文の
-  `## SOL Independent Review` 欄へ記入する。
-- 例外として、必要な場合に限り、Human Project Owner の明示的な許可を得たうえで
-  PMO（Claude Code Sonnet）が転記してよい。PMO が自らの判断で同欄へ記入してはならない。
+- 原則として、SOL Independent Review 結果は GPT SOL 自身が PR 本文の `## SOL Independent Review`
+  欄へ記入する。
+- 例外として、必要な場合に限り、Human Project Owner の明示的な許可を得たうえで PMO
+  （Claude Code Sonnet）が転記してよい。PMO が自らの判断で同欄へ記入してはならない。
 - この決定は GitHub Cloud Development Foundation v0.3 §20.1 の権限表「PR metadata 管理:
   SOL = Review 欄」と整合する。新たな役割変更ではなく、v0.3 が定めた原則の確認である。
 
-### 7.2 実績（原則決定より前の運用。原則からの逸脱として記録する）
+### 7.2 記入実績（決定より前の運用）
 
-以下はいずれも本決定（2026-08-13）より前の運用であり、原則（GPT SOL 自身が記入する）からの
-逸脱として記録する。
+以下 3 例はいずれも上記 7.1 の決定（2026-08-13）より前の運用である。3 例で記入者が一定していなかった
+こと、および 7.1 の決定がその状態を受けて行われたことを記録する。3 例のいずれも原則であったかの
+ように扱わない。
 
-| PR | 転記者 | 備考 |
-|---|---|---|
-| PR #7 | Human Project Owner | 転記 |
-| PR #10 | Human Project Owner | 転記 |
-| PR #12 | PMO | PMO が転記し、Human Project Owner が事後に確認 |
+1. **PR #7** — Human Project Owner が SOL Independent Review 結果を転記した。
+2. **PR #10** — Human Project Owner が SOL Independent Review 結果を転記した。この事実は
+   2026-08-13 に Overall Lead が Human Project Owner へ確認した。
+3. **PR #12** — GPT SOL が実施した再レビュー結果を PMO が PR 本文へ転記した。PR #7 / #10 の
+   Human Project Owner による転記とは異なる運用だった。Human Project Owner は、転記者が PMO で
+   あることと、GPT SOL の再レビュー自体は実施されたことを確認した。一方、GPT SOL のレビュー本文
+   そのものは GitHub 上に存在せず、PR 本文に残ったのは PMO による要約である。
 
 ### 7.3 未解決のまま残る事項
 
-以下は本文書によって解決されるものではない。解決策をここで確定させない。
+以下は本文書によって解決されるものではない。解決策・推奨案・暫定解・自動化案・新しい承認フローを
+ここで定義しない。
 
-- GPT SOL が GitHub へ書き込める capability を実際に保持しているかは未検証である。
-  GitHub Cloud Development Foundation v0.3 §20.2 は SOL の Review record write を
-  「only if supported by dedicated integration」とし、Pull Requests は Read、Contents Write は
-  None としている。
-- GitHub Cloud Development Foundation v0.3 §14.3 のとおり、PR 本文の記述だけでは、同欄を記入した
-  actor が本当に SOL であることを完全には証明できない。SOL 専用の GitHub App または reviewer
-  identity が用意されるまで、この限界は残る。
+- GPT SOL が GitHub へ書き込める capability を実際に保持しているかは未検証である。GitHub Cloud
+  Development Foundation v0.3 §20.2 は SOL の Review record write を「only if supported by
+  dedicated integration」とし、Pull Requests は Read、Contents Write は None としている。したがって
+  7.1 の原則を実際に実行できるかは integration の有無に依存し、現時点で確認されていない。
+- v0.3 §14.3 のとおり、PR 本文の記述だけでは、同欄を記入した actor が本当に SOL であることを
+  完全には証明できない。SOL 専用の GitHub App または reviewer identity が用意されるまで、この限界
+  は残る。
 - 例外パス（PMO 転記）が用いられる限り、SOL がレビューを実施した事実の GitHub native な記録が
   残らないという制約は解消しない。
+
+未解決であり、今後 Human Project Owner の判断および integration の整備が必要な状態である。
 
 ---
 
@@ -144,16 +221,35 @@ main branch の Required Status Checks は Human Project Owner により登録�
 
 - 「Require status checks to pass before merging」は有効。
 - 必須 status checks は `pr-policy`（GitHub Actions）と `validation`（GitHub Actions）の 2 件。
-- Merge Ready Mode で `pr-policy` が FAIL した場合、mergeable_state は `blocked` となり、Merge は
-  実際に阻止される。根拠は PR #12 の実測である。
-  - run 31705884135 → workflow `policy` / conclusion: `failure`
-  - run 31706080217 → workflow `policy` / conclusion: `success`
+- 「Require branches to be up to date before merging」は無効である。base branch が最新でない状態
+  でも Merge は可能であり、branch の最新性は gate が保証していない。この点は保証されているかの
+  ように記述しない。
 
-ただし「Require branches to be up to date before merging」は無効であり、base branch が最新でない
-状態でも Merge は可能である。branch の最新性は gate が保証していない。この点を保証されているかの
-ように記述してはならない。
+### 実測（PR #12, HEAD `97ecc06bb9489e4715f00be04a75570b37b2579b`）
 
-本改訂によって解決していない問題を、解決したかのように書かない。
+Human Project Owner の判断により、`## Integration Decision` 欄（`Opus decision:` / `Decision HEAD:`）
+が未記入の状態で Ready for Review へ切り替え、Merge Ready Mode を意図的に FAIL させた。
+
+| run | event | mode | conclusion |
+|---|---|---|---|
+| `31705884135` | `ready_for_review` | Merge Ready Mode | `failure` |
+| `31706080217` | `edited`（Integration Decision 記入後） | Merge Ready Mode | `success` |
+
+この FAIL 時に `mergeable_state` は `clean` から `blocked` へ変化し、GitHub 上で Merge が実際に
+阻止された。その後 `## Integration Decision` を記入すると run `31706080217` は `success` となり、
+`mergeable_state` は `blocked` から `clean` へ復帰した。両 run は Overall Lead が GitHub Actions の
+実行結果として照合済みである。
+
+したがって現在は、`policy / pr-policy` が Required Status Check として FAIL した場合、その FAIL が
+Merge を実際に阻止する、という実測済みの事実として記載する。
+
+### 過大に表現してはならない点
+
+- Branch Protection や Required Status Checks を変更可能な admin identity の残存リスクは解決されて
+  いない（[`docs/governance/merge-authority.md`](./merge-authority.md) §3 参照）。
+- 「Require branches to be up to date before merging」が無効であることにより生じる、base branch
+  非最新状態での Merge 可能性は、本改訂によって解決していない。
+- 本改訂によって解決していない問題を、解決したかのように書かない。
 
 ---
 
