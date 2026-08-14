@@ -447,7 +447,7 @@ ChatGPT、Claude、Codex等との会話は作業・検討・レビューの場�
 - GitHub Pages
 - Web Preview Environment
 
-GitHub Codespaces は初期構成に含めない。将来の採否は、本書では確定しない。
+GitHub Codespaces は、[GitHub Cloud 開発基盤 基礎設計 v0.3](../architecture/github-cloud-development-foundation_v0.3.md) R-03 / §30 の決定に基づき初期構成に含めない。将来の採否は、本書では確定しない。
 
 具体的な採用技術・構成は技術設計フェーズで決定する。
 
