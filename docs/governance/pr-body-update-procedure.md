@@ -18,8 +18,12 @@ GPT SOL が記入した `## SOL Independent Review` 欄を上書き消去した�
 closed 済みの Issue #1 について記録したのと同じ参照性の問題が生じる。本文書は、その内容を
 `docs/governance/` 配下の恒久的な参照場所として記録するものである。
 
-本文書は、PR #17 上で既に確定し実行された再発防止手順を記録するものであり、新しい Merge 権限・
-記入責任・承認フローを定義するものではない。
+本文書の基礎は、PR #17 上で既に確定し実行された再発防止手順である。これに加えて、PR #22 に対する
+SOL Independent Review の指摘により、適用対象主体の明確化（§4）、`## Integration Decision` 欄の
+委譲例外の明記（§5）、および復元可能性に関する記述の事実範囲への限定（§6）を行っている。
+
+本文書は、新しい Merge 権限・write 権限・記入責任・承認フローのいずれも定義しない。既存の正本文書が
+定める権限を確認し、その運用手順を記録するものである。
 
 出典: https://github.com/Panda4th/Eastern-Front-3D-visualizer/pull/17#issuecomment-5289217541
 
@@ -54,8 +58,11 @@ PR HEAD は全経過を通じて `9854f611aa4fbb0d2f49aa2e859b9903318670bd` か�
 という事情は、Overall Lead に同欄の記入権限を与える理由にならない。したがって Overall Lead は同欄を
 書き直さず、GPT SOL へ再記入を依頼した。
 
-GPT SOL が同欄へ記入していた散文部分は復元できていない。判定値については、run `31767683438` のログ
-から以下 5 項目が判定を通過していた事実が確定している。
+GPT SOL が同欄へ記入していた散文部分は、復旧作業の時点で復元されなかった。Overall Lead は 03:44 版の
+本文を保持しておらず、当時使用した REST ベースの経路では PR 本文の編集履歴を取得できなかった。これは
+当時の経路における実測事実であり、GitHub 全体で当該履歴が失われたことを意味しない（§6 参照）。
+
+判定値については、run `31767683438` のログから以下 5 項目が判定を通過していた事実が確定している。
 
 ```text
 SOL review commit: 9854f611aa4fbb0d2f49aa2e859b9903318670bd
@@ -83,7 +90,17 @@ Current HEAD: 9854f611aa4fbb0d2f49aa2e859b9903318670bd
 
 ## 4. R-3. 手順
 
-PR 本文へ書き込む主体（Overall Lead / PMO）は、以下をすべて満たす。
+本手順は、既存の正本文書によって PR 本文への更新権限を持つ**すべての主体**に適用する。現時点では
+Overall Lead（Claude Code Opus）、PMO（Claude Code Sonnet）、GPT SOL、および Human Project Owner が
+これにあたる。GPT SOL による PR 本文の直接更新は
+[Review Field Authoring Policy](./review-field-authoring.md) §7.1・§7.3 に正規経路かつ実測済みの
+capability として記録されており、同じ read-modify-write 競合が発生し得る。
+
+本手順は、既存の正本文書が定める write 権限および各欄の記入権限を変更しない。本文書によって新しい
+更新権限または記入権限を、いずれの主体へも付与しない。付与されていない欄への記入は、本手順を満たした
+場合であっても許されない。
+
+対象主体は、以下をすべて満たす。
 
 1. **書き込み直前に PR 本文を再取得する。** HEAD SHA の確認は本文再取得の代替とならない。両方を行う。
 2. **再取得した本文を基点として編集し、取得直後に書き込む。** 取得と書き込みの間に他の GitHub 操作を
@@ -101,8 +118,11 @@ PR 本文へ書き込む主体（Overall Lead / PMO）は、以下をすべて�
 - `## SOL Independent Review` 欄の記入者は GPT SOL 本人、または Human Project Owner による転記である
   （[Review Field Authoring Policy](./review-field-authoring.md) §7.1）。PMO は Human Project Owner の
   明示的な許可がある場合の例外に限る。
-- `## Integration Decision` 欄の記入者は Claude Code Opus のみである
-  （[Merge Authority Policy](./merge-authority.md) §2.6）。
+- `## Integration Decision` 欄の記入者は Claude Code Opus である
+  （[Merge Authority Policy](./merge-authority.md) §2.6）。ただし同 §2.6 は自己承認を禁じており、
+  Claude Code Opus が当該 PR の実装担当を兼ねる場合、Opus は同欄へ承認判断を記入しない。その事実を
+  PR 本文へ明記したうえで、同欄の判断を Human Project Owner へ委譲する。同様に、実装を担当した AI は
+  `## SOL Independent Review` 欄の判断者ともならない。
 - 誤って欄を消去した事実は、消去した actor に当該欄の記入権限を与えない。
 - 最終 Merge は Human Project Owner のみが行う。
 - Project Foundation v0.1 / GitHub Cloud Development Foundation v0.3 を変更していない。
@@ -113,8 +133,18 @@ PR 本文へ書き込む主体（Overall Lead / PMO）は、以下をすべて�
 
 利点のみを記載しない。以下は本手順によって解決していない。
 
-- **失われた本文は復元できない。** GitHub REST API から PR 本文の編集履歴を取得できない。PR #17 では
-  判定値 5 項目のみが `pr-policy` run のログから確定でき、GPT SOL の散文部分は復元できなかった。
+- **上書きされた本文が復元されるとは限らない。** PR #17 では、Overall Lead が 03:44 版の本文を保持
+  しておらず、当時使用した REST ベースの経路では PR 本文の編集履歴を取得できなかった。結果として
+  復旧時に確定できたのは、`pr-policy` run `31767683438` のログから読み取れる判定値 5 項目のみであり、
+  GPT SOL の散文部分は復元されなかった。
+
+  ここで確定している事実は「当時使用した経路では復元されなかった」ことに限られる。GitHub GraphQL の
+  `PullRequest.userContentEdits`（`UserContentEdit` に `diff` / `editor` / `editedAt` を持つ）は本件で
+  試行しておらず、同 API により編集履歴を取得できる可能性は否定されていない。2026-08-14 時点で、本
+  Repository の作業に用いている実行環境からは GraphQL endpoint への任意クエリが proxy により拒否され
+  （HTTP 403）、この経路での確認を実施できていない。**したがって「復元不能」を確定事実として扱わない。**
+  上書きが発生した場合は、まず GitHub UI の編集履歴表示または GraphQL `userContentEdits` による復元
+  可能性を確認し、その実測結果を記録する。
 - **本手順は運用規律であり、技術的に強制されない。** GitHub 側に条件付き更新が存在しない以上、競合の
   検出は書き込み主体の手続きにのみ依存する。手順を守らなかった場合を検出する gate はない。
 - **同時編集そのものを防止しない。** 本手順が縮小するのは、取得から書き込みまでの時間差に起因する
