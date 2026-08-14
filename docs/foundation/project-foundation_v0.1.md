@@ -341,9 +341,9 @@ Historical Event
 | Role | AI | 主責任 |
 |---|---|---|
 | 全体統括 | Claude Code Opus | プロジェクト全体管理、方向性決定、優先順位、統合判断 |
-| PMO | Claude Code Sonnet | Issue、PR、依存関係、進捗、GitHub状態管理 |
-| 基礎設計・独立レビュー | GPT SOL | 要件定義、アーキテクチャ、データモデル、実装前設計、独立レビュー |
-| 実装 | Codex | コーディング、テスト、修正、PR作成 |
+| PMO | Claude Code Sonnet | Issue、PR、依存関係、進捗、GitHub状態管理、transport、既存 Pull Request のコード修正 |
+| 基礎設計・独立レビュー | GPT SOL | 要件定義、アーキテクチャ、データモデル、実装前設計、独立レビュー。実装代理は Master が明示的に付与した場合のみの task-scoped 権限 |
+| 実装 | Codex | 自己完結型指示に基づく初稿著述・初回実装、Test 実装。transport は担当しない |
 
 ### 責任分離
 
@@ -356,11 +356,17 @@ Requirements / Architecture
         ↓
 Implementation Instructions
         ↓
-       Codex
+PMO: task branch Creation
         ↓
-Implementation / Tests
+Codex: Initial Implementation / Tests
+        ↓
+PMO: commit / push / Initial Pull Request
         ↓
 GPT SOL Independent Review
+        ↓
+PMO: Changes When Required
+        ↓
+GPT SOL Independent Re-review
         ↓
 Claude Code Opus
         ↓
@@ -438,9 +444,10 @@ ChatGPT、Claude、Codex等との会話は作業・検討・レビューの場�
 - GitHub Issues
 - GitHub Pull Requests
 - GitHub Actions
-- GitHub Codespaces
 - GitHub Pages
 - Web Preview Environment
+
+GitHub Codespaces は初期構成に含めない。将来の採否は、本書では確定しない。
 
 具体的な採用技術・構成は技術設計フェーズで決定する。
 
@@ -516,7 +523,7 @@ User Interface
 |---|---|---|
 | プロジェクト目的 | PASS | Historical Visualizerとして明確 |
 | 対象外範囲 | PASS | War Game / IF戦史との境界が明確 |
-| AI責任分界 | PASS | 設計・実装・レビュー・統括を分離 |
+| AI責任分界 | PASS | 文書上は設計・実装・レビュー・統括を分離。実行環境では Codex を除く全担当が単一 identity（`Panda4th` / admin）で動作しており、責任分離は技術的に強制されていない |
 | 史実性 | PASS | 非推測原則を明確化 |
 | 史料ポリシー | PASS | 優先順位と補助資料の扱いを定義 |
 | 数値不一致処理 | PASS | 比較可能性確認後の平均値採用 |
@@ -570,3 +577,9 @@ User Interface
 ```
 
 本ドキュメントを、以後のプロジェクト設計における **Project Foundation v0.1** として扱う。
+
+## 18. 改訂記録
+
+| 改訂日 | 改訂対象節 | 改訂理由 | 決定主体 |
+|---|---|---|---|
+| 2026-08-14 | §10 / §13 / §16 | AI 開発体制、Codespaces の初期非導入、AI 責任分界の判定射程を、決定済みの運用と実測へ合わせるため。Project Foundation v0.1 §17 の順序を採用し、path と `v0.1` の版表記を維持する。同時に Policy §15 の凍結解除条件を、起草時の 1 フェーズ分という意図に合わせる | D-1 / D-2: Human Project Owner、D-3: Overall Lead（Human Project Owner の一任に基づく） |
