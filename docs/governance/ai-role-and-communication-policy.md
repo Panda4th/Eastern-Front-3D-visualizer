@@ -237,11 +237,13 @@ Issue #13 では identity 分離そのものの解決策、GitHub App、dedicate
 
 ## 15. 後続改訂とガバナンス凍結
 
-Issue #13 の Merge をもってガバナンス文書整備フェーズを終了し、次フェーズを Technology Selection とする。
+Issue #13 の Merge をもってガバナンス文書整備フェーズを終了し、次フェーズを MVP Scope とする。この順序は、Project Foundation v0.1 §17 に従うとした Human Project Owner の 2026-08-14 決定に基づく。
 
-§14 の v0.3 改訂対象は個別 Pull Request に分割せず、単一の集約 Issue にまとめる。集約 Issue は Issue #13 の Merge 後に起票し、この文書の §14 を参照して内容を再定義しない。Issue 番号は未採番であるため、本書では記載しない。
+§14 の v0.3 改訂対象は個別 Pull Request に分割せず、単一の集約 Issue #16 にまとめる。集約 Issue はこの文書の §14 を参照し、内容を再定義しない。
 
-Issue #13 の Merge 後、Technology Selection 完了まで、ガバナンス文書を対象とする新規 Pull Request を凍結する。Merge 済み文書に含まれる事実誤りの是正は凍結対象外とし、文書の正確性を優先する。
+Issue #13 の Merge 後、Issue #25 に対応する Pull Request が Human Project Owner により Merge され、MVP Scope フェーズが完了するまで、ガバナンス文書を対象とする新規 Pull Request を凍結する。Merge 済み文書に含まれる事実誤りの是正は凍結対象外とし、文書の正確性を優先する。
+
+この解除条件は、Human Project Owner の一任に基づく Overall Lead の 2026-08-14 決定による。起草時に想定した凍結期間は次の 1 フェーズ分であり、Project Foundation v0.1 §17 の順序の下で Technology Selection 完了までとすると 4 フェーズ分へ拡大するため、起草意図を保持するよう MVP Scope フェーズ完了までへ改めた。
 
 `docs/governance/**` は governance-sensitive path として扱う。凍結解除後を含め、governance-sensitive Pull Request を同時に複数進行させない。
 
