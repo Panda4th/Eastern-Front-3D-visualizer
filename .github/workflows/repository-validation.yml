@@ -36,6 +36,7 @@ jobs:
               'docs/governance/ai-role-and-communication-policy.md',
               'docs/governance/merge-authority.md',
               'docs/governance/review-field-authoring.md',
+              'docs/governance/pr-body-update-procedure.md',
               'docs/decisions/0001-identity-separation-option-c.md',
               '.github/ISSUE_TEMPLATE/general.yml',
               '.github/ISSUE_TEMPLATE/historical.yml',

@@ -15,6 +15,7 @@ Instructionファイルは権限を技術的に強制するものではない。
 - `docs/governance/ai-role-and-communication-policy.md` — AI役割、Current State取得責任、transport、出力・連携ルール。v0.3後続運用差分は§14を参照する。
 - `docs/governance/merge-authority.md` — Merge authorityおよび実装担当AIの自己承認禁止。
 - `docs/governance/review-field-authoring.md` — Review記録と各欄の記入責任。
+- `docs/governance/pr-body-update-procedure.md` — PR本文更新時の再取得手順と他actor記入欄の保持。
 - `docs/decisions/0001-identity-separation-option-c.md` — Identity Separationに関する決定。
 
 ### 共通原則

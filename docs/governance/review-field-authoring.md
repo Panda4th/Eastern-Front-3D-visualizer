@@ -4,7 +4,7 @@
 **Adopted:** 2026-08-13
 **Decided by:** Human Project Owner
 **Upstream:** Project Foundation v0.1 / GitHub Cloud Development Foundation v0.3
-**Related:** [Merge Authority Policy](./merge-authority.md)（本文書は Merge 権限を変更しない）
+**Related:** [Merge Authority Policy](./merge-authority.md)（本文書は Merge 権限を変更しない） / [PR Body Update Procedure](./pr-body-update-procedure.md)（§3.3 の「置換直前に再確認する」の具体手順）
 
 ---
 
