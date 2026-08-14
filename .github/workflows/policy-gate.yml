@@ -48,7 +48,7 @@ jobs:
             };
             const files = await github.paginate(github.rest.pulls.listFiles, {...context.repo, pull_number: pr.number, per_page: 100});
             const names = files.map(f => f.filename);
-            const governanceFiles = names.filter(p => p.startsWith('.github/workflows/') || p.startsWith('.github/ISSUE_TEMPLATE/') || p === '.github/pull_request_template.md' || p.startsWith('docs/foundation/') || p.startsWith('docs/governance/'));
+            const governanceFiles = names.filter(p => p === 'AGENTS.md' || p === 'CLAUDE.md' || p.startsWith('.github/workflows/') || p.startsWith('.github/ISSUE_TEMPLATE/') || p === '.github/pull_request_template.md' || p.startsWith('docs/foundation/') || p.startsWith('docs/governance/'));
             const productFiles = names.filter(p => p.startsWith('src/') || p.startsWith('historical/') || p.startsWith('assets/'));
             if (governanceFiles.length && productFiles.length) {
               errors.push(`Governance-sensitive and product changes must not be mixed in one PR.\n  Governance-sensitive files:\n${governanceFiles.map(p => `    - ${p}`).join('\n')}\n  Product files:\n${productFiles.map(p => `    - ${p}`).join('\n')}`);

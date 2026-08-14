@@ -20,7 +20,8 @@ jobs:
             const sha = context.payload.pull_request?.head.sha || context.sha;
             const {data} = await github.rest.git.getTree({...context.repo, tree_sha: sha, recursive: 'true'});
             if (data.truncated) core.setFailed('Candidate tree is truncated; validation cannot be authoritative.');
-            const paths = new Set(data.tree.map(item => item.path));
+            const entries = new Map(data.tree.map(item => [item.path, item]));
+            const paths = new Set(entries.keys());
             const requiredDirectories = [
               '.github/ISSUE_TEMPLATE', '.github/workflows',
               'docs/foundation', 'docs/architecture', 'docs/governance', 'docs/decisions',
@@ -28,9 +29,13 @@ jobs:
             ];
             const requiredFiles = [
               'README.md',
+              'AGENTS.md',
+              'CLAUDE.md',
               'docs/foundation/project-foundation_v0.1.md',
               'docs/architecture/github-cloud-development-foundation_v0.3.md',
+              'docs/governance/ai-role-and-communication-policy.md',
               'docs/governance/merge-authority.md',
+              'docs/governance/review-field-authoring.md',
               'docs/decisions/0001-identity-separation-option-c.md',
               '.github/ISSUE_TEMPLATE/general.yml',
               '.github/ISSUE_TEMPLATE/historical.yml',
@@ -44,10 +49,14 @@ jobs:
             for (const dir of requiredDirectories) {
               if (![...paths].some(path => path === dir || path.startsWith(`${dir}/`))) missing.push(`${dir}/ (directory)`);
             }
-            for (const file of requiredFiles) if (!paths.has(file)) missing.push(file);
+            for (const file of requiredFiles) {
+              const entry = entries.get(file);
+              if (!entry) missing.push(file);
+              else if (entry.type !== 'blob') missing.push(`${file} (expected blob, found ${entry.type})`);
+            }
 
             const templatePath = '.github/pull_request_template.md';
-            if (paths.has(templatePath)) {
+            if (entries.get(templatePath)?.type === 'blob') {
               const response = await github.rest.repos.getContent({...context.repo, path: templatePath, ref: sha});
               const text = Buffer.from(response.data.content, 'base64').toString('utf8');
               const headings = ['Objective','Related Issue','Scope','Changes','Tests','Historical Data Impact','Source Traceability Impact','Client Compatibility Impact','Known Limitations','Current HEAD','SOL Independent Review','Integration Decision'];
