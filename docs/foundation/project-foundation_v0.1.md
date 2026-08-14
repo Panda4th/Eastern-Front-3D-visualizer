@@ -578,8 +578,10 @@ User Interface
 
 本ドキュメントを、以後のプロジェクト設計における **Project Foundation v0.1** として扱う。
 
+---
+
 ## 18. 改訂記録
 
 | 改訂日 | 改訂対象節 | 改訂理由 | 決定主体 |
 |---|---|---|---|
-| 2026-08-14 | §10 / §13 / §16 | AI 開発体制、Codespaces の初期非導入、AI 責任分界の判定射程を、決定済みの運用と実測へ合わせるため。Project Foundation v0.1 §17 の順序を採用し、path と `v0.1` の版表記を維持する。同時に Policy §15 の凍結解除条件を、起草時の 1 フェーズ分という意図に合わせる | D-1 / D-2: Human Project Owner、D-3: Overall Lead（Human Project Owner の一任に基づく） |
+| 2026-08-14 | §10 / §13 / §16、および §18 の新設 | AI 開発体制、Codespaces の初期非導入、AI 責任分界の判定射程を、決定済みの運用と実測へ合わせるため。path と `v0.1` の版表記は維持する | Human Project Owner（2026-08-14 決定。Issue #24 および同 Issue の着手前提決定記録 [#issuecomment-5291051887](https://github.com/Panda4th/Eastern-Front-3D-visualizer/issues/24#issuecomment-5291051887) による） |
