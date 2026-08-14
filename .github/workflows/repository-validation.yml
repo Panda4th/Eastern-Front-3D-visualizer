@@ -28,9 +28,13 @@ jobs:
             ];
             const requiredFiles = [
               'README.md',
+              'AGENTS.md',
+              'CLAUDE.md',
               'docs/foundation/project-foundation_v0.1.md',
               'docs/architecture/github-cloud-development-foundation_v0.3.md',
+              'docs/governance/ai-role-and-communication-policy.md',
               'docs/governance/merge-authority.md',
+              'docs/governance/review-field-authoring.md',
               'docs/decisions/0001-identity-separation-option-c.md',
               '.github/ISSUE_TEMPLATE/general.yml',
               '.github/ISSUE_TEMPLATE/historical.yml',
