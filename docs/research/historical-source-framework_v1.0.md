@@ -6,7 +6,7 @@
 **Prepared by:** GPT SOL（v0.1〜v0.2.5の著述）/ Codex（v1.0初稿）/ PMO — Claude Code Sonnet（v1.0正本登録版の実装）  
 **Prepared:** 2026-08-15  
 **GitHub baseline checked:** `main` @ `6626e7c3aea4c9eb24d0e87a965a5c0c2e0da7e8`  
-**Related:** Project Foundation v0.1 §§2–9, 12, 15–17 / Issue #24 / Issue #25 / Parent Issue #26 / Overall Lead Review 2026-08-14〜15（v0.1 Review / v0.2 Re-Review / v0.2.1 2nd Re-Review / v0.2.2 Independent Re-Review `#issuecomment-5293751543` / v0.2.3 Independent Re-Review `#issuecomment-5293761279` / v0.2.4 Independent Re-Review `#issuecomment-5299189860` / v0.2.5 Independent Re-Review `#issuecomment-5299304890` / v1.0 Independent Re-Review `#issuecomment-5299527450`）/ Human Project Owner HPO-1〜HPO-15・HPO-R1〜R4 / Framework承認記録 `#issuecomment-5299352830` / HPO-15決定記録 `#issuecomment-5299561829`  
+**Related:** Project Foundation v0.1 §§2–9, 12, 15–17 / Issue #24 / Issue #25 / Parent Issue #26 / Overall Lead Review 2026-08-14〜15（v0.1 Review / v0.2 Re-Review / v0.2.1 2nd Re-Review / v0.2.2 Independent Re-Review `#issuecomment-5293751543` / v0.2.3 Independent Re-Review `#issuecomment-5293761279` / v0.2.4 Independent Re-Review `#issuecomment-5299189860` / v0.2.5 Independent Re-Review `#issuecomment-5299304890` / v1.0 Independent Re-Review `#issuecomment-5299527450` / v1.0 2nd Independent Re-Review `#issuecomment-5299722931`）/ Human Project Owner HPO-1〜HPO-15・HPO-R1〜R4 / Framework承認記録 `#issuecomment-5299352830` / HPO-15決定記録 `#issuecomment-5299561829`  
 **Normative effect:** 本文書はHPO-13により承認された上位Research Frameworkであり、Stage 1以降のHistorical Source研究における手続基準として適用する。本文書は、Project Foundation、AI Role and Communication Policy等のgovernance正本、Historical Data Modelのschema・field名・状態enum、Historical Source Acceptance Policyの詳細基準・閾値、Repository path規則、およびFoundation §17のフェーズ順序を単独で変更・確定しない。矛盾が生じた場合は該当適用領域の正本を優先し、本文書側の不整合として報告する。  
 **Parent tracking issue:** GitHub Issue #26 `Historical Sources: 採用資料定義・収集Frameworkの決定記録と後続作業管理`  
 
@@ -1936,7 +1936,9 @@ Human Project Ownerは、承認済みFrameworkを非governance pathへ先行登�
 
 1. v1.0初稿はCodexが作成した（artifact SHA-256 `7187a6eb5ec51540c93bf4e61994ddb7d65af5b9a39413b8cb2dedf9e61a37ca`）。
 2. Overall Leadのv1.0 Independent Re-Review（Issue #26 `#issuecomment-5299527450`）が`CHANGES_REQUIRED`（MUST FIX 1 / SHOULD FIX 3）と判定した。
-3. 当該指摘の反映をPMOが担当した。根拠はHPO-15（Issue #26 `#issuecomment-5299561829`）である。
+3. 当該指摘の反映を第1回改訂としてPMOが担当した。根拠はHPO-15（Issue #26 `#issuecomment-5299561829`）である。
+4. Overall Leadのv1.0 2nd Independent Re-Review（Issue #26 `#issuecomment-5299722931`）が`CHANGES_REQUIRED`（MUST FIX 2 / SHOULD FIX 2）と判定した。
+5. 当該指摘の反映を第2回改訂としてPMOが担当した。本Appendixは第2回改訂時点の自己検証を記録する。
 
 ### O.1 Verification result
 
@@ -1945,11 +1947,12 @@ Human Project Ownerは、承認済みFrameworkを非governance pathへ先行登�
 3. **Current State provenance:** §19.1を「PMO — Claude Code Sonnetが2026-08-15T00:47:24Z実取得」とし、取得主体・取得時刻を明記したうえで、`main` HEAD、Open Pull Request数、Issue #16 / #24 / #25 / #26の状態・`updated_at`、Issue #26のコメント数を実取得値として記載した。`main` HEAD・Open Pull Request数・Issue #24 / #25の`updated_at`について、Overall Leadが2026-08-15T00:32Zに実測した値と一致することを確認した。**PASS**。
 4. **自称の統一:** §2.1 / §2.2 / §13.1 / §15.1 / §19.2の5箇所に限定して「本提案」「本Proposal」を「本Framework」へ統一した。§19.1のStage 0成果物を指す履歴記述は任意扱いとし変更していない。上記5箇所以外および規定文言は書き換えていない。**PASS**。
 5. **HPO-15の記録:** §23.16としてHPO-15（v1.0実装担当の変更、記録先Issue #26 `#issuecomment-5299561829`）を追加した。§23.14 HPO-13および§23.15 HPO-14の記述と矛盾せず、Framework承認内容を再審査していない。§24.3 FOLLOW-UP-AのAppendix範囲記述（Appendix B〜O）は現構成と一致しており、本改訂はAppendixを追加しないため変更を要しないことを確認した。**PASS**。
-6. **規定内容の非変更:** §6 / §7 / §10 / §11 / §12 / §13（自称を除く）/ §14 / §15（自称を除く）/ §16 / §17 / §18、§19 Stage体系、§20 D-1〜D-8表、§21 AC 1〜38、§22 RISK-1〜11、§26 R-1〜R-14、§27 C-1〜C-10、§28 T-1〜T-15について、v1.0初稿（SHA-256 `7187a6eb5ec51540c93bf4e61994ddb7d65af5b9a39413b8cb2dedf9e61a37ca`）とのdiffで差分がないことを確認した。本改訂の変更範囲はheader Prepared by、§19.1 Current State provenance、§2.1 / §2.2 / §13.1 / §15.1 / §19.2の自称5箇所、§23.16の追加、およびAppendix Oに限定される。新規Scope / Deliverable / AC / R / C / Tは追加していない。**PASS**。
-7. **v0.2.5規定内容への退行なし:** 本改訂はv1.0初稿からの限定的修正であり、HPO-13承認対象であるv0.2.5（SHA-256 `04c5a4ff50f4d4f3456f3eae3f09d511538315e6e657dae72854df205f9fa60b`）からv1.0初稿への変更範囲を超えて規定内容を追加・変更していない。**PASS**。
-8. **Finding ID一意性:** 本改訂で参照するfinding ID（`v1.0 Independent Re-Review / MUST FIX-1`、`v1.0 Independent Re-Review / SHOULD FIX-1〜3`）はすべて回次修飾形式であり、既存finding IDとの衝突はない。**PASS**。
-9. **Mechanical structure:** テキスト直後に空行なしで`---`が続く箇所0件、重複見出し0件、親節を欠く小節番号0件、自文書見出しに解決しない`§x.y`参照0件、旧D-ID残存0件である。H1は1件、H2は43件である（v1.0初稿の自己申告値と一致し、退行がないことを確認した）。**PASS**。
-10. **権限:** 本自己検証をIndependent Review、Integration Decision、Framework承認またはMerge可否判断として扱っていない。Issue / Pull Request / Repositoryへの書き込み、Merge、Auto Merge、`main` direct pushまたはBranch Protection変更は、本自己検証の時点では行っていない。**PASS**。
+6. **規定内容の非変更:** §6 / §7 / §10 / §11 / §12 / §13（自称を除く）/ §14 / §15（自称を除く）/ §16 / §17 / §18、§19 Stage体系（§19.1の自称・provenance記述を除く）、§20 D-1〜D-8表、§21 AC 1〜38、§22 RISK-1〜11、§26 R-1〜R-14、§27 C-1〜C-10、§28 T-1・T-3〜T-15（§28.2 T-2を除く）について、v1.0初稿（SHA-256 `7187a6eb5ec51540c93bf4e61994ddb7d65af5b9a39413b8cb2dedf9e61a37ca`）とのdiffで差分がないことを確認した。第1回・第2回PMO改訂を合わせた変更範囲は、header `Prepared by` / `Related`、§19.1 Current State provenanceおよび成果物表記、§2.1 / §2.2 / §13.1 / §15.1 / §19.2の自称5箇所、§23冒頭のHPO-15反映、§23.16の追加、§24.8 / §24.9の追加、§28.2 T-2の更新、およびAppendix Oに限定される。新規Scope / Deliverable / AC / R / C / Tは追加していない。**PASS**。
+7. **第2回改訂（v1.0 2nd Independent Re-Review反映）:** header `Related`へHPO-15・v1.0 Independent Re-Review round・`#issuecomment-5299527450`・`#issuecomment-5299561829`・v1.0 2nd Independent Re-Review round・`#issuecomment-5299722931`を追加し、§23冒頭を「HPO-1〜HPO-15」へ更新した（MUST FIX-1是正）。§19.1・Appendix O.6に残存していた指示書task ID（`A-0` / `A-4` / `B-1`）を、外部の一過性文書に依存しない自己完結する記述へ置換した（MUST FIX-2是正）。§24.8 / §24.9を追加し、§24冒頭の round数を9回へ更新し、§28.2 T-2の列挙を(1)〜(9)へ更新した（SHOULD FIX-1是正）。§19.1の「成果物：本Proposal」を「成果物：Framework Proposal（D-1）」へ改めた（SHOULD FIX-2是正）。本Appendix自体（本項目を含む）の更新は、Overall Leadのv1.0 Overall Lead Integration Decision MUST FIX-1（Appendix Oが第2回改訂を反映せず§24.9と矛盾していた指摘）への是正である。**PASS**。
+8. **v0.2.5規定内容への退行なし:** 第1回・第2回PMO改訂はいずれもv1.0初稿からの限定的修正であり、HPO-13承認対象であるv0.2.5（SHA-256 `04c5a4ff50f4d4f3456f3eae3f09d511538315e6e657dae72854df205f9fa60b`）からv1.0初稿への変更範囲を超えて規定内容を追加・変更していない。**PASS**。
+9. **Finding ID一意性:** 本改訂で参照するfinding ID（`v1.0 Independent Re-Review / MUST FIX-1`、`v1.0 Independent Re-Review / SHOULD FIX-1〜3`、`v1.0 2nd Independent Re-Review / MUST FIX-1〜2`、`v1.0 2nd Independent Re-Review / SHOULD FIX-1〜2`）はすべて回次修飾形式であり、既存finding IDとの衝突はない。**PASS**。
+10. **Mechanical structure:** テキスト直後に空行なしで`---`が続く箇所0件、重複見出し0件、親節を欠く小節番号0件、自文書見出しに解決しない`§x.y`参照0件、旧D-ID残存0件である。H1は1件、H2は43件である（v1.0初稿の自己申告値と一致し、退行がないことを確認した）。**PASS**。
+11. **権限:** 本自己検証をIndependent Review、Integration Decision、Framework承認またはMerge可否判断として扱っていない。Issue / Pull Request / Repositoryへの書き込み、Merge、Auto Merge、`main` direct pushまたはBranch Protection変更は、本自己検証の時点では行っていない。**PASS**。
 
 ### O.2 Self-verification conclusion
 
