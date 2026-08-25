@@ -1549,7 +1549,11 @@ Spatial / Temporal / Numericalの3類型をPilotで処理し、重大なTraceabi
 4. 無料の現地閲覧のみ：Historical Data根拠として不適格、discovery / 所在確認には利用可。
 5. metadataだけ無料で本文有料、または購入・download・複写料が必要：Historical Data根拠として不適格。
 6. 特定個人だけが取得した再現不能な無料copy：Historical Data根拠として不適格。
-7. 利用規約への同意・クリックスルーの受諾のみを要し、アカウント登録を要しない：本項を理由に不適格としない。他要件充足時の適格候補。
+
+**判定規則（Amendment 1 / HPO-20 / HPO-21）**
+
+- 同一Source Objectについて複数のaccess pathが併存しうる。無登録の公開経路でEvidence本文・画像へ到達できる場合はcase 1で判定し、アカウント登録を要する別pathの存否は判定を左右しない。この場合、当該Source Objectをcase 2に該当するものとして扱わない。case 2は、Evidence本文・画像への到達がアカウント登録を要するpathでしか成立しない場合に適用する。
+- 利用規約への同意・クリックスルーの受諾は、アカウント登録と区別する。これのみを要し、アカウント登録を要しない場合、当該要件を理由に不適格としない。本条件はcase 1からcase 6のいずれにも重畳しうる横断条件であり、独立のcaseとして数えない。
 
 ### 28.12 T-12. Access-axis orthogonality test
 
