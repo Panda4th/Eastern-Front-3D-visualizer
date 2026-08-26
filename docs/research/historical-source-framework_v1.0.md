@@ -2,11 +2,11 @@
 
 **Project:** 独ソ戦3D Historical Visualizer  
 **Repository:** `Panda4th/Eastern-Front-3D-visualizer`  
-**Status:** Approved by Human Project Owner 2026-08-15（HPO-13）/ 正本登録版 / 登録先 `docs/research/historical-source-framework_v1.0.md`  
+**Status:** Approved by Human Project Owner 2026-08-15（HPO-13）/ 正本登録版 / Amendment 1 適用済み（HPO-20 / HPO-21。§23.17 / §23.18）/ 登録先 `docs/research/historical-source-framework_v1.0.md`  
 **Prepared by:** GPT SOL（v0.1〜v0.2.5の著述）/ Codex（v1.0初稿）/ PMO — Claude Code Sonnet（v1.0正本登録版の実装）  
 **Prepared:** 2026-08-15  
-**GitHub baseline checked:** `main` @ `6626e7c3aea4c9eb24d0e87a965a5c0c2e0da7e8`  
-**Related:** Project Foundation v0.1 §§2–9, 12, 15–17 / Issue #24 / Issue #25 / Parent Issue #26 / Overall Lead Review 2026-08-14〜15（v0.1 Review / v0.2 Re-Review / v0.2.1 2nd Re-Review / v0.2.2 Independent Re-Review `#issuecomment-5293751543` / v0.2.3 Independent Re-Review `#issuecomment-5293761279` / v0.2.4 Independent Re-Review `#issuecomment-5299189860` / v0.2.5 Independent Re-Review `#issuecomment-5299304890` / v1.0 Independent Re-Review `#issuecomment-5299527450` / v1.0 2nd Independent Re-Review `#issuecomment-5299722931`）/ Human Project Owner HPO-1〜HPO-15・HPO-R1〜R4 / Framework承認記録 `#issuecomment-5299352830` / HPO-15決定記録 `#issuecomment-5299561829`  
+**GitHub baseline checked:** `main` @ `6626e7c3aea4c9eb24d0e87a965a5c0c2e0da7e8`（v1.0 正本登録時）/ `main` @ 98afbf0cdbf2a7641ad8efbf33ee9f11ed609e5b（Amendment 1）  
+**Related:** Project Foundation v0.1 §§2–9, 12, 15–17 / Issue #24 / Issue #25 / Parent Issue #26 / Overall Lead Review 2026-08-14〜15（v0.1 Review / v0.2 Re-Review / v0.2.1 2nd Re-Review / v0.2.2 Independent Re-Review `#issuecomment-5293751543` / v0.2.3 Independent Re-Review `#issuecomment-5293761279` / v0.2.4 Independent Re-Review `#issuecomment-5299189860` / v0.2.5 Independent Re-Review `#issuecomment-5299304890` / v1.0 Independent Re-Review `#issuecomment-5299527450` / v1.0 2nd Independent Re-Review `#issuecomment-5299722931`）/ Human Project Owner HPO-1〜HPO-15・HPO-R1〜R4 / Framework承認記録 `#issuecomment-5299352830` / HPO-15決定記録 `#issuecomment-5299561829` / Amendment 1 — HPO-20 `#issuecomment-5393685627` / HPO-21 / HPO-22（Issue #26）  
 **Normative effect:** 本文書はHPO-13により承認された上位Research Frameworkであり、Stage 1以降のHistorical Source研究における手続基準として適用する。本文書は、Project Foundation、AI Role and Communication Policy等のgovernance正本、Historical Data Modelのschema・field名・状態enum、Historical Source Acceptance Policyの詳細基準・閾値、Repository path規則、およびFoundation §17のフェーズ順序を単独で変更・確定しない。矛盾が生じた場合は該当適用領域の正本を優先し、本文書側の不整合として報告する。  
 **Parent tracking issue:** GitHub Issue #26 `Historical Sources: 採用資料定義・収集Frameworkの決定記録と後続作業管理`  
 
@@ -40,7 +40,7 @@ ProjectのSingle Source of TruthはProject Foundation §12に従いGitHubであ�
 
 本v1.0は、Human Project Ownerが2026-08-15にHPO-13で承認したFramework Proposal v0.2.5（SHA-256 `04c5a4ff50f4d4f3456f3eae3f09d511538315e6e657dae72854df205f9fa60b`）を正本登録用に整備した版である。v0.2.5に対するOverall Lead Independent Re-Reviewは`APPROVE`（`BLOCKER 0 / MUST FIX 0 / SHOULD FIX 0 / FOLLOW-UP 1`）であり、そのIntegration判断とHuman Project OwnerによるFramework承認を区別する。本版は承認済み規定を再審査せず、正本登録に必要なmetadata、決定記録および履歴構造だけを整備する。
 
-Historical Data確定根拠として適格なのは、第三者が遠隔のonline channelからEvidence本文・画像まで金銭負担なく再現可能に確認できるSourceだけである。公開online access、無料登録後のonline access、第三者にも同条件で再現可能な無料remote request、および同一Source Objectの合法的な別free online channelを適格候補とする。現地閲覧のみ、有料access、特定個人だけの再現不能なcopyは不適格とし、例外条項は設けない。
+Historical Data確定根拠として適格なのは、第三者が遠隔のonline channelからEvidence本文・画像まで金銭負担なく再現可能に確認できるSourceだけである。公開online access、アカウント登録を要しない第三者再現可能な無料remote request、および同一Source Objectの合法的な別free online channelを適格候補とする。無料であってもアカウント登録・会員登録を要するonline accessは不適格とする（HPO-20、2026-08-24）。現地閲覧のみ、有料access、特定個人だけの再現不能なcopyは不適格とし、例外条項は設けない。
 
 free-access eligibilityはSource Tier、Claim Fitnessおよび§6.6の探索・取得7状態とは直交する。適格性を正準7状態へ第8状態として混入させず、独立したaccess eligibility / exclusion recordとして保持する。
 
@@ -262,18 +262,20 @@ Sourceの時間・地理・部隊粒度を超える精度を確定情報とし�
 
 Historical Dataの根拠として採用するSource Objectは、第三者が遠隔のonline channelから**金銭を支払わず、Evidence本文・画像を再現可能に確認できること**を必須条件とする。例外条項は設けない。
 
-**適格候補は次の4類型である。**
+**適格候補は次の3類型である。**
 
 1. 公開Webページ、online viewerまたはdownloadから無償で確認できる。
-2. 無料アカウント登録後にonlineで無償確認できる。
-3. 無料のremote request後にdigital copyまたはonline accessが提供され、第三者にも同じ条件で再現可能である。
-4. 同一Source Objectを合法的な別channelから上記条件で無償確認できる。
+2. 無料のremote request後にdigital copyまたはonline accessが提供され、第三者にも同じ条件で再現可能である。ただし当該remote requestがアカウント登録・会員登録を要する場合は適格としない（HPO-21、2026-08-25）。
+3. 同一Source Objectを合法的な別channelから上記条件で無償確認できる。
 
-**Historical Data確定根拠として不適格なのは次の3類型である。**
+**Historical Data確定根拠として不適格なのは次の4類型である。**
 
 1. 有料会員登録、subscription、購入、閲覧料、download料、複写料その他の支払いが必要である。
-2. 現地閲覧のみで、遠隔から無償確認できない。
-3. 特定個人だけに付与された権限、再現不能な一時access、第三者一般に再現できない裁量的提供による。
+2. 無料であってもアカウント登録・会員登録を要する（HPO-20、2026-08-24）。
+3. 現地閲覧のみで、遠隔から無償確認できない。
+4. 特定個人だけに付与された権限、再現不能な一時access、第三者一般に再現できない裁量的提供による。
+
+**Amendment 1 note（HPO-20 / HPO-21）:** 2026-08-24のHPO-20により、改定前の適格類型2「無料アカウント登録後のonline access」を撤回し、不適格類型へ移した。2026-08-25のHPO-21により、無料remote request（§7.1観測区分3）は、第三者一般への再現可能性に加えてアカウント登録・会員登録を要しないことを条件として適格を維持する。利用規約への同意・クリックスルーの受諾はアカウント登録と区別し、前者のみを要するSourceは本改定の対象外とする。決定記録は§23.17 / §23.18を参照する。
 
 現地閲覧のみのSourceはdiscovery、所在確認、将来候補の記録には利用できるが、Historical Data確定根拠には採用しない。現地閲覧で取得した複製がrights条件を満たし、合法的かつ安定的なfree online channelで第三者へ公開された場合は、現地閲覧経路ではなく当該free online channelを別途Gate判定する。
 
@@ -346,15 +348,17 @@ Stage 1 Channel Access Feasibilityでは、各channelについて次の8区分�
 
 これらはGate 0 / Stage 1の観測区分であり、Historical Data Modelのcanonical enumとして先取り確定しない。registration / request / on-site / paid等の正式なfield名・値域もHistorical Data Modelへ留保する。
 
-観測区分3 `free and reproducible remote request`を適格候補と判定する場合は、公開された請求手続きのlocator、無料であることの明示、第三者一般への適用可否、応答実績の有無・確認日・確認actor・結果等、再現可能性の判定根拠を記録する。個別の好意的対応や特定actorだけの取得実績から第三者一般への再現可能性を推定せず、根拠を確認できない間は適格と確定しない。
+**Amendment 1 note（HPO-20）:** 観測区分の集合・番号・値は本改訂で変更していない。区分2 `online access after free registration` は観測の記録として存続する。変更されたのはeligibilityの判定のみであり、既存の実測記録から区分2を削除しない。区分2に該当するSourceは§6.11によりHistorical Data確定根拠として不適格である。
+
+観測区分3 `free and reproducible remote request`を適格候補と判定する場合は、公開された請求手続きのlocator、無料であることの明示、第三者一般への適用可否、応答実績の有無・確認日・確認actor・結果等、再現可能性の判定根拠を記録する。あわせて、当該requestがアカウント登録・会員登録を要しないことを確認し、その確認結果を記録する。登録を要する場合は適格としない（HPO-21）。個別の好意的対応や特定actorだけの取得実績から第三者一般への再現可能性を推定せず、根拠を確認できない間は適格と確定しない。
 
 Channel Access Feasibilityでは、HPO-9の境界を適用したときにGerman-side Tier 1 SourceがどのClaim family・期間・部隊・必要粒度でどの程度残るかを実測し、Soviet-sideとのcoverage / Tier非対称を比較可能にする。さらに、部隊位置、front line、都市占領時刻、strength、casualties等のhigh-risk Claim familyごとに、free-access範囲でbilateral、上級／下級または隣接部隊によるcorroborationが成立しうるかを実測し、成立しない場合の終端候補をsingle-source support、Scope縮小、Unknownまたはomissionとして記録する。最終状態と閾値はHistorical Data Model / Historical Source Acceptance Policyへ留保する。
 
 Human Project Owner承認方針は**併用モデル**とする。
 
 - GPT SOL：通常のOrientation、finding aid調査、公開catalog検索、アクセス可能資料のEvidence抽出を担当可能。
-- Human Project Owner：無料アクセスの範囲で、SOL環境から取得不能な資料について本人操作・無料登録・第三者にも再現可能な無料remote request・別環境確認等を必要に応じて担当。現地閲覧のみまたは個人限定の再現不能なcopyをHistorical Data確定根拠へ昇格させない。
-- **有料請求・購入・有料会員登録・閲覧料等はエスカレーション対象ではなく採用除外条件とする。**
+- Human Project Owner：無料アクセスの範囲で、SOL環境から取得不能な資料について本人操作・アカウント登録を要しない第三者再現可能な無料remote request・別環境確認等を必要に応じて担当。現地閲覧のみまたは個人限定の再現不能なcopyをHistorical Data確定根拠へ昇格させない。
+- **有料請求・購入・有料会員登録・閲覧料等はエスカレーション対象ではなく採用除外条件とする。無料であってもアカウント登録・会員登録を要するaccess pathは、同じく採用除外条件とし、登録判断へエスカレーションしない（HPO-20）。**
 - 他actorを用いる場合も、実capabilityを推測せず実測する。
 
 **Change-history note — v0.2 §7.1の「現地閲覧」削除:** v0.2からv0.2.1への改訂時（2026-08-14）、文書実装担当GPT SOLがHuman側担当記述から「現地閲覧」を削除した。この変更はHPO-9決定前に行われ、当時、削除を命じるHuman Project Owner決定または明示的な根拠は記録されていなかったため、権限根拠を確認できない著者側変更として履歴に残す。現行§7.1が現地閲覧のみのSourceをHistorical Data確定根拠へ採用しないのは、当該先行変更を権限根拠とするのではなく、v0.2.1 2nd Re-Review後にHuman Project Ownerが決定したHPO-9によって事後的に正当化・正式化されたためである。先行変更の手続上の欠陥を遡及的に解消済みとは扱わない。
@@ -834,7 +838,7 @@ Public GitHubへ原史料binaryを保存することをデフォルトにしな�
 
 ### 18.2 Adoption-time verification floor and future availability
 
-**採用時点のadoption condition:** 本Frameworkが採用史料について要求する下限は、第三者がprovenance / locatorを用いて史料を再特定でき、かつ遠隔のonline channelから**金銭負担なくEvidence本文・画像を再現可能に確認できること**である。§6.11の適格4類型を満たすことを確認し、access channel、check date、actorおよびfree-access eligibilityを記録する。現地閲覧のみ、有料accessまたは個人限定の再現不能なcopyはHistorical Data確定根拠として採用しない。例外条項は設けない。
+**採用時点のadoption condition:** 本Frameworkが採用史料について要求する下限は、第三者がprovenance / locatorを用いて史料を再特定でき、かつ遠隔のonline channelから**金銭負担なくEvidence本文・画像を再現可能に確認できること**である。§6.11の適格3類型を満たすことを確認し、access channel、check date、actorおよびfree-access eligibilityを記録する。現地閲覧のみ、有料accessまたは個人限定の再現不能なcopyはHistorical Data確定根拠として採用しない。例外条項は設けない。
 
 **将来にわたるavailability:** 採用時点の条件を満たしたPortalやfree online channelが、将来も公開を継続することまでProjectは保証しない。Portal停止、公開終了、URL変更、source-side / regional restriction等が生じた場合はavailabilityの変化として記録し、合法的な別free online channelを再探索する。過去の採用時条件を満たしていた事実と、現在または将来の到達可能性を混同しない。
 
@@ -991,7 +995,7 @@ Issue #26本文のD-ID体系は本表と一致する。D-1の版表記およびr
 27. HPO-11に基づくIssue #25 Acceptance Criteriaの明示的拡張と、D-2による無権限の暗黙拡張を区別し、後者を行わない。
 28. 別の研究者またはAIが採用判断を独立にレビューできる。
 29. 史料不足を推測で補わずworkflowが終端できる。
-30. 採用史料が§6.11の適格4類型を満たし、不適格3類型に該当しないことを確認できる。
+30. 採用史料が§6.11の適格3類型を満たし、不適格4類型に該当しないことを確認できる。
 31. free-access eligibility / exclusionがSource Tierおよび§6.6の正準7状態と別軸で保持される。
 32. 除外候補Sourceについてidentifier / locator、access channel、check date、actor、eligibility、exclusion reason、対象Claimとの関係、内容確認状態を追跡でき、remote requestを適格候補とする場合は第三者再現可能性の判定根拠を保持できる。
 33. 有料Sourceの所在だけ、Claim-specificな反証可能性、無料Evidenceで具体化された対立を、それぞれexcluded candidate / potential conflict / formal conflictへ一意に区別できる。
@@ -1049,7 +1053,7 @@ Issue #26本文のD-ID体系は本表と一致する。D-1の版表記およびr
 ### 22.10 RISK-10. Research actor access capability
 
 **Risk:** Protocolは正しくてもactorのnetwork / auth / environmentがarchive channelへ到達できず実行不能になる。  
-**Mitigation:** Gate 0でchannel別・actor別に実測し、actor-side blockとsource-side restrictionを分離する。SOL / Humanの併用モデルを既定とし、無料登録・別環境確認等はHumanへエスカレーション可能とする。有料accessが必要なSourceは採用候補から除外する。
+**Mitigation:** Gate 0でchannel別・actor別に実測し、actor-side blockとsource-side restrictionを分離する。SOL / Humanの併用モデルを既定とし、別環境確認等はHumanへエスカレーション可能とする。有料accessが必要なSource、および無料であってもアカウント登録・会員登録を要するSourceは採用候補から除外する（HPO-20）。
 
 ### 22.11 RISK-11. Paid-source dependency
 
@@ -1060,13 +1064,15 @@ Issue #26本文のD-ID体系は本表と一致する。D-1の版表記およびr
 
 ## 23. Human Project Owner Decisions Reflected in v1.0
 
-2026-08-14〜15、Human Project OwnerはHPO-1〜HPO-15およびHPO-R1〜R4を決定した。決定およびFramework同期状態のGitHub SOTは **Issue #26** とし、Current Stateは§19.1を参照する。HPO-9 / HPO-10の正しい内容は、訂正内容を反映済みのIssue #26本文およびOverall Lead訂正コメント`#issuecomment-5292982327`を出典とする。先行する誤記コメント`#issuecomment-5292851625`は訂正コメントにより上書き済みであり、矛盾する場合はIssue本文および訂正コメントを正とする。
+2026-08-14〜15、Human Project OwnerはHPO-1〜HPO-15およびHPO-R1〜R4を決定した。本節§23.1から§23.16はv1.0正本登録時点（2026-08-15）の決定記録であり、その後の決定は§23.17以降へ追加する。§23.1から§23.16の本文は当時の記録として保持し、後続決定による改定は各項の注記で示す。決定およびFramework同期状態のGitHub SOTは **Issue #26** とし、Current Stateは§19.1を参照する。HPO-9 / HPO-10の正しい内容は、訂正内容を反映済みのIssue #26本文およびOverall Lead訂正コメント`#issuecomment-5292982327`を出典とする。先行する誤記コメント`#issuecomment-5292851625`は訂正コメントにより上書き済みであり、矛盾する場合はIssue本文および訂正コメントを正とする。
 
 HPO-13 / HPO-14の正しい記録はIssue #26コメント`#issuecomment-5299352830`とする。v0.2.5 Overall Lead Independent Re-Reviewは`#issuecomment-5299304890`として投稿済みであり、その`APPROVE`はIntegration判断である。Framework承認はHPO-13により別途成立している。Issue #26本文のFramework Status、D-1、HPO-13 / HPO-14およびfollow-up checklistの同期はPMO作業として分離し、本書では完了済みと推定しない。
 
 ### 23.1 HPO-1 — Research actor
 
 **Approved:** SOL + Humanの併用。SOLは通常のOrientation / public archive researchを担当する。無料登録・別環境確認等で対応可能な無料SourceはHumanへエスカレーションできる。有料accessが必要なSourceは購入判断へエスカレーションせず採用対象外とする。各channelの実capabilityは毎回実測する。
+
+> **Amended 2026-08-24（HPO-20）:** 本項の「無料登録」による対応は、HPO-20によりHistorical Data確定根拠の取得手段としては用いない。エスカレーション対象は別環境確認等に限る。本項の原文は2026-08-14時点の決定記録として保持する。現行の担当区分は§7.1を正とする。
 
 ### 23.2 HPO-2 — Governance freeze / path
 
@@ -1096,6 +1102,8 @@ HPO-13 / HPO-14の正しい記録はIssue #26コメント`#issuecomment-52993528
 
 **Approved:** Historical Dataの根拠として採用する史料は、Evidence本文・画像を第三者が金銭負担なく確認できるものに限定する。無料アカウント登録は許容する。有料会員登録、subscription、購入、閲覧料、download料、複写注文等が必要な史料は採用不可とする。metadataだけ無料でEvidence本体が有料の場合も採用不可とする。
 
+> **Amended 2026-08-24（HPO-20）:** 本項の「無料アカウント登録は許容する」は撤回された。無料であってもアカウント登録・会員登録を要するSourceはHistorical Data確定根拠として不適格である。本項の原文は2026-08-14時点の決定記録として保持する。現行の規範は§6.11および§23.17を正とする。
+
 ### 23.9 Re-Review decisions — HPO-R1〜R4
 
 GitHub Issue #26に以下を記録済みである。
@@ -1113,6 +1121,8 @@ GitHub Issue #26に以下を記録済みである。
 - 有料access、現地閲覧のみ、特定個人だけの再現不能なaccessは不適格である。
 - 現地閲覧のみのSourceはdiscovery / 所在確認 / 将来候補の記録には使えるが、Historical Data確定根拠には採用しない。rights条件を満たす複製が合法的かつ安定的なfree online channelで公開された場合は、そのchannelを別途Gate判定する。
 - Gate 0 / Stage 1では§7.1の8区分を観測する。これはData Modelのcanonical enumではない。
+
+> **Amended 2026-08-24（HPO-20）/ 2026-08-25（HPO-21）:** HPO-20により適格4類型のうち「無料登録後のonline access」が撤回され、適格は3類型となった。HPO-21により、無料remote requestはアカウント登録・会員登録を要しないことを条件として適格を維持する。HPO-9の「例外条項を設けない」性格は維持される。本項の原文は2026-08-14時点の決定記録として保持する。現行の規範は§6.11を正とする。
 
 ### 23.11 HPO-10 — Excluded candidate source and conflict handling
 
@@ -1157,6 +1167,29 @@ Overall LeadがHPO-14へ付した条件を次のとおり保持する。
 ### 23.16 HPO-15 — v1.0実装担当の変更
 
 **Decided 2026-08-15 / Human Project Owner.** Codex Cloudがファイルの受け渡しに対応せず改訂元v0.2.5を供給できないため、案1（Codex実装）を置き換え、v1.0の実装担当をPMOとする。Independent ReviewはGPT SOLが担当し、実装担当と分離されるためmerge-authority §2.6の例外を要しない。記録先はIssue #26コメント`#issuecomment-5299561829`である。
+
+### 23.17 HPO-20 — 無料アカウント登録の一律不適格化（HPO-8 の改定）
+
+**Decided 2026-08-24 / Human Project Owner:** HPO-8を改定し、無料であってもアカウント登録・会員登録を要するSourceをHistorical Data確定根拠として一律不適格とする。改定前HPO-8の「無料アカウント登録は許容する」を撤回する。記録先はIssue #26コメント`#issuecomment-5393685627`である。
+
+適用範囲を次のとおり限定する。
+
+1. 対象は§7.1の観測区分2 `online access after free registration` である。
+2. 観測区分の集合そのものを変更しない。区分2は観測の記録として存続し、eligibilityの判定のみが変わる。既存の実測記録から区分2を削除しない。
+3. 利用規約への同意・クリックスルーの受諾は、アカウント登録と区別する。前者のみを要するSourceは本改定の対象外である。
+4. 本改定はHPO-9の適格類型に波及し、適格4類型が3類型となる。HPO-9の「例外条項を設けない」性格は維持される。
+
+本改定は§6.6の正準7状態、8観測区分の定義と集合、HPO-10、およびFoundation §17のフェーズ順序を変更しない。
+
+### 23.18 HPO-21 — 観測区分 3 の条件付き適格維持
+
+**Decided 2026-08-25 / Human Project Owner:** 観測区分3 `free and reproducible remote request` は条件付きで適格を維持する。条件は、第三者一般が同条件で再現可能であること、および当該remote requestがアカウント登録・会員登録を要しないことの2点である。記録先はIssue #26のHPO-21決定コメントである。
+
+HPO-20は観測区分2を対象とする改定であり、区分3の扱いを含んでいなかった。remote requestは申請者の識別情報の提供を伴う点で区分2と隣接するため、扱いの確定を要した。本決定は区分3を不適格とせず、アカウント登録を伴うremote requestのみをHPO-20と同じ理由で不適格とする。
+
+§7.1が定める区分3の判定根拠の記録要件（公開請求手続きのlocator、無料であることの明示、第三者一般への適用可否、応答実績の有無・確認日・確認actor・結果）は本決定によって緩和されない。根拠を確認できない間は適格と確定しない。
+
+本決定は観測区分の集合、§6.6の正準7状態、Gate 0正式判定の通過、およびStage 1のPhase B使用可channel分類を変更しない。
 
 ---
 
@@ -1402,7 +1435,7 @@ Stage 1はIssue #25へ史料的成立可能性の入力を提供するにとど�
 
 ### 26.11 R-11. Free-access source eligibility
 
-Historical Dataの根拠として採用するSourceは、第三者が遠隔のonline channelからEvidence本文・画像まで金銭負担なく再現可能に確認でき、§6.11の適格4類型を満たすこと。現地閲覧のみ、有料accessまたは個人限定の再現不能なcopyを採用しない。例外条項を設けない。採用時条件と将来availabilityを区別する。
+Historical Dataの根拠として採用するSourceは、第三者が遠隔のonline channelからEvidence本文・画像まで金銭負担なく再現可能に確認でき、§6.11の適格3類型を満たすこと。現地閲覧のみ、有料accessまたは個人限定の再現不能なcopyを採用しない。例外条項を設けない。採用時条件と将来availabilityを区別する。
 
 ### 26.12 R-12. Access eligibility / exclusion traceability
 
@@ -1511,11 +1544,16 @@ Spatial / Temporal / Numericalの3類型をPilotで処理し、重大なTraceabi
 次の各caseを一意に判定できること。
 
 1. online public accessで本文・画像を確認可能：他要件充足時の適格候補。
-2. 無料登録後にonlineで本文・画像を確認可能：他要件充足時の適格候補。
-3. 公開された請求手続き、無料条件、第三者一般への適用可否および応答実績の根拠があり、無料remote requestで第三者にも同条件のdigital copy / online accessが提供される：他要件充足時の適格候補。
+2. 無料アカウント登録後にonlineで本文・画像を確認可能：Historical Data根拠として不適格（HPO-20）。discovery / 所在確認には利用可。
+3. 公開された請求手続き、無料条件、第三者一般への適用可否および応答実績の根拠があり、無料remote requestで第三者にも同条件のdigital copy / online accessが提供され、かつ当該requestがアカウント登録・会員登録を要しない：他要件充足時の適格候補（HPO-21）。
 4. 無料の現地閲覧のみ：Historical Data根拠として不適格、discovery / 所在確認には利用可。
 5. metadataだけ無料で本文有料、または購入・download・複写料が必要：Historical Data根拠として不適格。
 6. 特定個人だけが取得した再現不能な無料copy：Historical Data根拠として不適格。
+
+**判定規則（Amendment 1 / HPO-20 / HPO-21）**
+
+- 同一Source Objectについて複数のaccess pathが併存しうる。無登録の公開経路でEvidence本文・画像へ到達できる場合はcase 1で判定し、アカウント登録を要する別pathの存否は判定を左右しない。この場合、当該Source Objectをcase 2に該当するものとして扱わない。case 2は、Evidence本文・画像への到達がアカウント登録を要するpathでしか成立しない場合に適用する。
+- 利用規約への同意・クリックスルーの受諾は、アカウント登録と区別する。これのみを要し、アカウント登録を要しない場合、当該要件を理由に不適格としない。本条件はcase 1からcase 6のいずれにも重畳しうる横断条件であり、独立のcaseとして数えない。
 
 ### 28.12 T-12. Access-axis orthogonality test
 
@@ -1643,6 +1681,8 @@ References:
 3. 有料会員登録、subscription、購入、閲覧料、download料、複写注文その他の支払いが必要な史料は採用不可とする。
 4. 有料Sourceは購入判断へエスカレーションせず、無料代替Source探索・Scope縮小・Unknown / omissionで処理する。
 5. `v0.2 Re-Review / SHOULD FIX-A`（negative evidence 7状態の転記漏れ）をStage 1前修正として同時に是正した。
+
+> **Amended 2026-08-24（HPO-20）:** 上記項目2「無料アカウント登録は許容する」は撤回された。本Appendixは2026-08-14時点の決定記録であり、原文を保持する。現行の規範は§6.11および§23.17を正とする。
 
 ---
 
